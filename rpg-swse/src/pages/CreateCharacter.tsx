@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { AttributeName, SkillName, HeroicClass, Attributes } from '../types';
 import { useCharacters } from '../hooks/useCharacter';
@@ -42,8 +42,11 @@ export function CreateCharacter() {
   const { create } = useCharacters();
   const [step, setStep] = useState(0);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState('');
+  const [image, setImage] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [speciesIndex, setSpeciesIndex] = useState(0);
   const [age, setAge] = useState(20);
   const [gender, setGender] = useState('');
@@ -93,32 +96,51 @@ export function CreateCharacter() {
 
   function handleCreate() {
     if (!name) { setError('Nome é obrigatório'); return; }
-    const applied = getAppliedAttributes();
-    const char = create({
-      name,
-      species: species.name,
-      heroicClass,
-      level: 1,
-      xp: 0,
-      age,
-      gender,
-      height,
-      weight,
-      attributes: applied,
-      trainedSkills,
-      feats: [...species.bonusFeats],
-      talents: [],
-      forcePowers: [],
-      weapons: [],
-      armor: null,
-      inventory: [],
-      credits,
-      currentHp: selectedClass.hpPerLevel + getAbilityModifier(applied.CON),
-      currentCondition: 0,
-      appearance,
-      background,
-    });
-    if (char) navigate(`/character/${char.id}`);
+    setLoading(true);
+    setError('');
+    try {
+      const applied = getAppliedAttributes();
+      const char = create({
+        name,
+        image: image || undefined,
+        species: species.name,
+        heroicClass,
+        level: 1,
+        xp: 0,
+        age,
+        gender,
+        height,
+        weight,
+        attributes: applied,
+        trainedSkills,
+        feats: [...species.bonusFeats],
+        talents: [],
+        forcePowers: [],
+        weapons: [],
+        armor: null,
+        inventory: [],
+        credits,
+        currentHp: selectedClass.hpPerLevel + getAbilityModifier(applied.CON),
+        currentCondition: 0,
+        appearance,
+        background,
+      });
+      if (!char) {
+        setError('Erro ao criar: você não está autenticado.');
+        setLoading(false);
+        return;
+      }
+      window.setTimeout(() => {
+        navigate(`/character/${char.id}`, { replace: true });
+      }, 0);
+    } catch (e) {
+      setLoading(false);
+      if (e instanceof Error && e.name === 'QuotaExceededError') {
+        setError('Imagem muito grande! Use uma imagem menor ou URL.');
+      } else {
+        setError(`Erro ao criar personagem: ${e instanceof Error ? e.message : 'Tente novamente.'}`);
+      }
+    }
   }
 
   function renderStep() {
@@ -261,6 +283,62 @@ export function CreateCharacter() {
           <label>Créditos Iniciais
             <input type="number" value={credits} onChange={e => setCredits(parseInt(e.target.value))} />
           </label>
+
+          <div style={{ marginTop: 20, padding: 16, background: 'var(--bg-secondary)', borderRadius: 10 }}>
+            <h3 style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Avatar do Personagem</h3>
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              style={{ display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer' }}
+            >
+              <div style={{
+                width: 80, height: 80, borderRadius: 8, overflow: 'hidden',
+                border: '2px dashed var(--border)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: image ? 'none' : 'var(--bg-card)',
+                flexShrink: 0,
+              }}>
+                {image ? (
+                  <img src={image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span className="icon" style={{ color: 'var(--text-muted)', fontSize: 28 }}>add_photo_alternate</span>
+                )}
+              </div>
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--accent)', marginBottom: 2 }}>Escolher imagem</div>
+                <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>PNG, JPG ou URL</div>
+              </div>
+            </div>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              style={{ display: 'none' }}
+              onChange={e => {
+                const file = e.target.files?.[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => setImage(ev.target?.result as string);
+                reader.readAsDataURL(file);
+              }}
+            />
+            <input
+              type="url"
+              value={image}
+              onChange={e => setImage(e.target.value)}
+              placeholder="Ou cole uma URL..."
+              style={{ marginTop: 8 }}
+            />
+            {image && (
+              <button
+                className="btn-small btn-secondary"
+                onClick={() => setImage('')}
+                style={{ marginTop: 8 }}
+              >
+                Remover imagem
+              </button>
+            )}
+          </div>
+
           <div className="textarea-group">
             <label>Aparência
               <textarea value={appearance} onChange={e => setAppearance(e.target.value)} rows={3} placeholder="Descreva a aparência do seu personagem..." />
@@ -275,6 +353,7 @@ export function CreateCharacter() {
       case 5: return (
         <div className="step-content review">
           <h2>Revisão da Ficha</h2>
+          {error && <p className="error-msg">{error}</p>}
           <div className="review-grid">
             <div><strong>Nome:</strong> {name}</div>
             <div><strong>Espécie:</strong> {species.name}</div>
@@ -314,7 +393,7 @@ export function CreateCharacter() {
       <div className="step-nav">
         {step > 0 && <button className="btn-secondary" onClick={() => setStep(step - 1)}>Anterior</button>}
         {step < steps.length - 1 && <button className="btn-primary" onClick={() => setStep(step + 1)}>Próximo</button>}
-        {step === steps.length - 1 && <button className="btn-primary" onClick={handleCreate}>Criar Personagem</button>}
+        {step === steps.length - 1 && <button className="btn-primary" onClick={handleCreate} disabled={loading}>{loading ? 'Criando...' : 'Criar Personagem'}</button>}
       </div>
     </div>
   );

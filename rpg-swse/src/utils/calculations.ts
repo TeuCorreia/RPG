@@ -54,7 +54,7 @@ export function calculateDamageThreshold(character: Character): number {
 }
 
 export function calculateInitiative(character: Character): number {
-  return getAbilityModifier(attributes.DEX);
+  return getAbilityModifier(character.attributes.DEX);
 }
 
 export function calculateForcePoints(level: number): number {

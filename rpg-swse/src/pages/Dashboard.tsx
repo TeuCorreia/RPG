@@ -5,7 +5,7 @@ import { CharacterCard } from '../components/CharacterCard';
 import { calculateMaxHp } from '../utils/calculations';
 
 export function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { characters, remove } = useCharacters();
   const navigate = useNavigate();
 
@@ -15,59 +15,80 @@ export function Dashboard() {
     : 0;
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-welcome">
-        <div className="welcome-text">
-          <h1>Bem-vindo, {user}</h1>
-          <p>Que a Força esteja com você</p>
-        </div>
-        <div className="dashboard-actions">
-          <button className="btn-primary btn-with-icon" onClick={() => navigate('/character/new')}>
-            <span className="btn-icon">+</span> Nova Ficha
-          </button>
-          <button className="btn-logout" onClick={logout}>
-            Sair
-          </button>
-        </div>
+    <div style={{ position: 'relative', zIndex: 1 }}>
+      {/* Header */}
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">Crônicas da Galáxia</h1>
+        <p className="dashboard-subtitle">
+          Bem-vindo de volta, {user}. A Força está com você. Suas crônicas estão prontas para serem expandidas.
+        </p>
       </div>
 
-      <div className="dashboard-stats">
-        <div className="stat-card">
+      {/* Stats */}
+      <div className="stats-grid">
+        <div className="stat-card-new">
+          <span className="icon stat-icon">group</span>
           <span className="stat-value">{characters.length}</span>
           <span className="stat-label">Fichas</span>
         </div>
-        <div className="stat-card">
+        <div className="stat-card-new">
+          <span className="icon stat-icon">trending_up</span>
           <span className="stat-value">{avgLevel}</span>
           <span className="stat-label">Nível Médio</span>
         </div>
-        <div className="stat-card">
+        <div className="stat-card-new">
+          <span className="icon stat-icon">favorite</span>
           <span className="stat-value">{totalHp}</span>
           <span className="stat-label">HP Total</span>
         </div>
       </div>
 
-      <div className="character-grid">
+      {/* Characters Section */}
+      <div className="section-header">
+        <h2>
+          <span className="icon" style={{ color: 'var(--accent)' }}>person_search</span>
+          Seus Personagens
+        </h2>
+        {characters.length > 0 && (
+          <button
+            className="sidebar-btn"
+            onClick={() => navigate('/character/new')}
+            style={{ width: 'auto', padding: '8px 16px', fontSize: 12, margin: 0 }}
+          >
+            <span className="icon" style={{ fontSize: 16 }}>add</span>
+            Nova Ficha
+          </button>
+        )}
+      </div>
+
+      <div className="char-grid">
         {characters.length === 0 && (
-          <div className="empty-state">
-            <div className="empty-icon">⚔️</div>
-            <h2>Nenhum personagem ainda</h2>
-            <p>Crie seu primeiro herói da galáxia!</p>
-            <button className="btn-primary" onClick={() => navigate('/character/new')}>
-              Criar Personagem
-            </button>
+          <div className="summon-card" style={{ gridColumn: '1 / -1' }} onClick={() => navigate('/character/new')}>
+            <span className="icon">add_circle</span>
+            <h3>Criar Novo Herói</h3>
+            <p>Expanda seu roster e comece uma nova jornada lendária.</p>
           </div>
         )}
         {characters.map(char => (
-          <CharacterCard
-            key={char.id}
-            character={char}
-            onClick={() => navigate(`/character/${char.id}`)}
-            onDelete={() => {
-              if (confirm(`Tem certeza que deseja excluir "${char.name}"?`)) remove(char.id);
-            }}
-          />
+          <div key={char.id} style={{ position: 'relative' }}>
+            <CharacterCard
+              character={char}
+              onClick={() => navigate(`/character/${char.id}`)}
+              onDelete={() => {
+                if (confirm(`Tem certeza que deseja excluir "${char.name}"?`)) remove(char.id);
+              }}
+            />
+          </div>
         ))}
+        {characters.length > 0 && (
+          <div className="summon-card glass-panel" onClick={() => navigate('/character/new')}>
+            <span className="icon">add_circle</span>
+            <h3>Convocar Novo Herói</h3>
+            <p>Expanda seu roster e comece uma nova jornada lendária.</p>
+          </div>
+        )}
       </div>
+
     </div>
   );
 }

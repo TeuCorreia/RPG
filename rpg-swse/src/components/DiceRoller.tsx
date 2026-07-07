@@ -43,7 +43,7 @@ export function DiceRoller({ roller, compact }: Props) {
         ))}
       </div>
       <div className="dice-history">
-        {roller.history.slice(0, 5).map((r, i) => (
+        {roller.history.slice(0, 5).map(r => (
           <div key={r.timestamp} className="roll-entry">
             <span className="roll-expr">{r.expression}</span>
             <span className="roll-result">= {r.result}</span>

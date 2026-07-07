@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { getUsers, saveUsers, getSession, saveSession, clearSession } from '../utils/storage';
 
 interface AuthContextType {

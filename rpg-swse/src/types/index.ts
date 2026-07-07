@@ -75,6 +75,7 @@ export interface Character {
   userId: string;
   name: string;
   species: string;
+  image?: string;
   heroicClass: HeroicClass;
   level: number;
   xp: number;
