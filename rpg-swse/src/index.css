@@ -4298,3 +4298,593 @@ body {
     align-items: stretch;
   }
 }
+
+/* ============================
+   PROGRESSION PAGE ENHANCEMENTS
+   ============================ */
+.progression-section {
+  margin-bottom: 24px;
+}
+
+.progression-section-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.progression-section-body p {
+  margin-bottom: 16px;
+}
+
+.progression-subsection-title {
+  font-family: "Cinzel", serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  margin: 20px 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Summary Grid */
+.progression-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.progression-summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.progression-summary-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px var(--shadow);
+}
+
+.progression-summary-card strong {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.progression-summary-card small {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Highlight Box */
+.progression-highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--talent-color);
+  border-radius: 8px;
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.progression-highlight .icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.progression-highlight strong {
+  color: var(--text-primary);
+}
+
+/* Talent Trees */
+.talent-trees-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.talent-tree-group {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.talent-tree-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.talent-tree-header:hover {
+  background: rgba(74, 125, 255, 0.05);
+}
+
+.talent-tree-header::-webkit-details-marker {
+  display: none;
+}
+
+.talent-tree-header::after {
+  content: "expand_more";
+  font-family: "Material Symbols Outlined";
+  font-size: 20px;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.talent-tree-group[open] .talent-tree-header::after {
+  transform: rotate(180deg);
+}
+
+.talent-tree-header strong {
+  color: var(--accent);
+}
+
+.talent-tree-count {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.talent-tree-body {
+  padding: 4px 16px 16px;
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
+}
+
+.talent-tree-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.talent-tree-name {
+  display: block;
+  font-size: 12px;
+  color: var(--talent-color);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.talent-tree-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.talent-tree-list li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.talent-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: background 0.15s;
+  margin-bottom: 2px;
+}
+
+.talent-item:hover {
+  background: rgba(74, 125, 255, 0.05);
+}
+
+.talent-item-name {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.talent-item-name::before {
+  content: "✦ ";
+  color: var(--talent-color);
+  font-size: 10px;
+}
+
+.talent-item-btn {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.15s;
+  flex-shrink: 0;
+}
+
+.talent-item-btn:hover {
+  border-color: var(--talent-color);
+  color: var(--talent-color);
+  background: rgba(74, 222, 128, 0.08);
+  transform: none;
+}
+
+.talent-item-desc {
+  width: 100%;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  padding: 6px 8px;
+  margin-top: 2px;
+  background: var(--bg-card);
+  border-radius: 6px;
+  border: 1px solid rgba(74, 222, 128, 0.15);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Feat Examples */
+.feat-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.feat-example-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+.feat-example-card:hover {
+  border-color: var(--feat-color);
+}
+
+.feat-example-name {
+  font-size: 13px;
+  color: var(--feat-color);
+}
+
+.feat-example-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Talents vs Feats Comparison */
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.comparison-card {
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.comparison-talents {
+  background: rgba(74, 222, 128, 0.04);
+  border-color: rgba(74, 222, 128, 0.2);
+}
+
+.comparison-feats {
+  background: rgba(255, 215, 0, 0.04);
+  border-color: rgba(255, 215, 0, 0.2);
+}
+
+.comparison-card h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Cinzel", serif;
+  font-size: 16px;
+  color: var(--text-primary);
+  margin-bottom: 14px;
+}
+
+.comparison-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.comparison-card li {
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  border-bottom: 1px solid rgba(67, 70, 84, 0.15);
+}
+
+.comparison-card li:last-child {
+  border-bottom: none;
+}
+
+.comparison-card li::before {
+  content: "• ";
+  font-weight: 700;
+}
+
+.comparison-talents li::before {
+  color: var(--talent-color);
+}
+
+.comparison-feats li::before {
+  color: var(--feat-color);
+}
+
+.progression-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+/* Attribute Progression Visual */
+.attr-progression-visual {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.attr-progression-step {
+  text-align: center;
+  padding: 16px 8px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.attr-progression-step:hover {
+  border-color: var(--stat-color);
+  box-shadow: 0 0 15px rgba(244, 114, 182, 0.1);
+}
+
+.attr-progression-level {
+  font-family: "Cinzel", serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.attr-progression-bonus {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--stat-color);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.attr-progression-desc {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Half Level Grid */
+.half-level-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.half-level-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  transition: border-color 0.2s;
+}
+
+.half-level-item:hover {
+  border-color: var(--accent);
+}
+
+.half-level-lv {
+  color: var(--text-muted);
+}
+
+.half-level-bonus {
+  font-weight: 700;
+  color: var(--accent);
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Prestige Classes */
+.prestige-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.prestige-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 14px;
+  transition: all 0.2s;
+}
+
+.prestige-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(74, 125, 255, 0.1);
+}
+
+.prestige-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.prestige-name {
+  font-size: 14px;
+  color: var(--accent);
+}
+
+.prestige-level {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  background: var(--bg-card);
+  border-radius: 4px;
+}
+
+.prestige-reqs {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+
+.prestige-reqs-label {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.prestige-reqs-text {
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.prestige-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Quick Summary Table */
+.quick-summary {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.quick-summary-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 16px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+}
+
+.quick-summary-row:last-child {
+  border-bottom: none;
+}
+
+.quick-summary-row.header {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.quick-summary-row.header span {
+  color: var(--text-muted);
+}
+
+.quick-summary-row span:first-child {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.quick-summary-row.header span:first-child {
+  color: var(--text-muted);
+}
+
+@media (max-width: 768px) {
+  .progression-summary-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+  }
+
+  .comparison-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .attr-progression-visual {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .talent-tree-body {
+    grid-template-columns: 1fr;
+  }
+
+  .prestige-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quick-summary-row {
+    grid-template-columns: 100px 1fr;
+    gap: 10px;
+    font-size: 12px;
+  }
+}
