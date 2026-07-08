@@ -3557,6 +3557,52 @@ body {
   color: var(--accent);
 }
 
+/* Class Detail Panel */
+.levelup-class-detail {
+  margin-top: 12px;
+  padding: 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.levelup-class-detail-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.levelup-class-detail-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.lcd-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lcd-full {
+  grid-column: 1 / -1;
+}
+
+.lcd-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.lcd-value {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
 .levelup-class-add {
   border-style: dashed;
   border-color: var(--text-muted);

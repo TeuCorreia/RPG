@@ -112,18 +112,65 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
               )}
             </div>
             {addingNew && (
-              <div className="levelup-class-grid" style={{ marginTop: 8 }}>
-                {availableClasses.map(ac => (
-                  <button
-                    key={ac.name}
-                    className={`levelup-class-btn ${selectedClass === ac.name ? 'selected' : ''}`}
-                    onClick={() => { setSelectedClass(ac.name); setAddingNew(false); }}
-                  >
-                    <span className="class-name">{ac.name}</span>
-                    <span className="class-level">Nível 1</span>
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className="levelup-class-grid" style={{ marginTop: 8 }}>
+                  {availableClasses.map(ac => (
+                    <button
+                      key={ac.name}
+                      className={`levelup-class-btn ${selectedClass === ac.name ? 'selected' : ''}`}
+                      onClick={() => setSelectedClass(ac.name)}
+                    >
+                      <span className="class-name">{ac.name}</span>
+                      <span className="class-level">Nível 1</span>
+                    </button>
+                  ))}
+                </div>
+                {selectedClass && (
+                  <div className="levelup-class-detail">
+                    <p className="levelup-class-detail-desc">
+                      {classList.find(c => c.name === selectedClass)?.description?.split('.')[0]}.
+                    </p>
+                    <div className="levelup-class-detail-stats">
+                      {(() => {
+                        const cd = classList.find(c => c.name === selectedClass)!;
+                        const defs = cd.defenseBonuses;
+                        return (
+                          <>
+                            <div className="lcd-item">
+                              <span className="lcd-label">HP</span>
+                              <span className="lcd-value">+{Math.floor(cd.hpPerLevel / 2)} + CON</span>
+                            </div>
+                            <div className="lcd-item">
+                              <span className="lcd-label">Ref</span>
+                              <span className="lcd-value">{defs.reflex > 0 ? `+${defs.reflex}` : '—'}</span>
+                            </div>
+                            <div className="lcd-item">
+                              <span className="lcd-label">Fort</span>
+                              <span className="lcd-value">{defs.fortitude > 0 ? `+${defs.fortitude}` : '—'}</span>
+                            </div>
+                            <div className="lcd-item">
+                              <span className="lcd-label">Von</span>
+                              <span className="lcd-value">{defs.will > 0 ? `+${defs.will}` : '—'}</span>
+                            </div>
+                            <div className="lcd-item">
+                              <span className="lcd-label">Atributos</span>
+                              <span className="lcd-value">{cd.keyAbilities.join(', ')}</span>
+                            </div>
+                            <div className="lcd-item">
+                              <span className="lcd-label">Perícias</span>
+                              <span className="lcd-value">{cd.trainedSkills} + INT</span>
+                            </div>
+                            <div className="lcd-item lcd-full">
+                              <span className="lcd-label">Árvores de Talento</span>
+                              <span className="lcd-value">{cd.talentTrees.join(', ')}</span>
+                            </div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
