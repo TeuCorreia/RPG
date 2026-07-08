@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Character, AttributeName } from '../types';
+import type { Character, AttributeName, HeroicClass } from '../types';
 import { getHpGain, getLevelUpGains, getAbilityModifier } from '../utils/calculations';
 import { classList } from '../data/classes';
 
@@ -19,8 +19,15 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
   const nextLevel = character.level + 1;
   const gains = getLevelUpGains(nextLevel);
   const conMod = getAbilityModifier(character.attributes.CON);
-  const hpGain = getHpGain(character.heroicClass, conMod);
-  const cls = classList.find(c => c.name === character.heroicClass);
+  const existingNames = new Set(character.classes.map(c => c.name));
+  const availableClasses = classList.filter(c => !existingNames.has(c.name));
+
+  const [addingNew, setAddingNew] = useState(false);
+  const [selectedClass, setSelectedClass] = useState<HeroicClass>(
+    character.classes[0]?.name
+  );
+  const hpGain = getHpGain(selectedClass, conMod);
+  const cls = classList.find(c => c.name === selectedClass);
 
   const [featName, setFeatName] = useState('');
   const [talentName, setTalentName] = useState('');
@@ -40,8 +47,16 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
     const updatedAttrs = { ...character.attributes };
     selectedAttrs.forEach(attr => { updatedAttrs[attr] += 1; });
 
+    const isNew = !existingNames.has(selectedClass);
+    const updatedClasses = isNew
+      ? [...character.classes, { name: selectedClass, level: 1 }]
+      : character.classes.map(ce =>
+          ce.name === selectedClass ? { ...ce, level: ce.level + 1 } : ce
+        );
+
     const updates: Partial<Character> = {
       level: nextLevel,
+      classes: updatedClasses,
       attributes: updatedAttrs,
       currentHp: character.currentHp + hpGain,
     };
@@ -64,16 +79,60 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
 
         <div className="levelup-summary">
           <div className="levelup-badge">{character.level} → {nextLevel}</div>
-          <p className="levelup-desc">
-            {cls?.description?.split('.')[0]}.
-          </p>
+          <p className="levelup-desc">Escolha uma classe para avançar ou adicione uma nova.</p>
+        </div>
+
+        {/* Class Selector */}
+        <div className="levelup-section">
+          <span className="levelup-icon material-symbols-outlined">switch_account</span>
+          <div style={{ flex: 1 }}>
+            <strong>Avançar / Adicionar Classe</strong>
+            <div className="levelup-class-grid">
+              {character.classes.map(ce => {
+                const isSelected = !addingNew && ce.name === selectedClass;
+                return (
+                  <button
+                    key={ce.name}
+                    className={`levelup-class-btn ${isSelected ? 'selected' : ''}`}
+                    onClick={() => { setSelectedClass(ce.name); setAddingNew(false); }}
+                  >
+                    <span className="class-name">{ce.name}</span>
+                    <span className="class-level">{ce.level} → {ce.level + 1}</span>
+                  </button>
+                );
+              })}
+              {availableClasses.length > 0 && !addingNew && (
+                <button
+                  className="levelup-class-btn levelup-class-add"
+                  onClick={() => setAddingNew(true)}
+                >
+                  <span className="class-name" style={{ fontSize: 20 }}>+</span>
+                  <span className="class-level">Nova Classe</span>
+                </button>
+              )}
+            </div>
+            {addingNew && (
+              <div className="levelup-class-grid" style={{ marginTop: 8 }}>
+                {availableClasses.map(ac => (
+                  <button
+                    key={ac.name}
+                    className={`levelup-class-btn ${selectedClass === ac.name ? 'selected' : ''}`}
+                    onClick={() => { setSelectedClass(ac.name); setAddingNew(false); }}
+                  >
+                    <span className="class-name">{ac.name}</span>
+                    <span className="class-level">Nível 1</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="levelup-section">
           <span className="levelup-icon material-symbols-outlined">favorite</span>
           <div>
             <strong>+{hpGain} HP</strong>
-            <small>{cls?.hpPerLevel}/2 + CON ({conMod >= 0 ? '+' : ''}{conMod})</small>
+            <small>{cls?.name}: {cls?.hpPerLevel}/2 + CON ({conMod >= 0 ? '+' : ''}{conMod})</small>
           </div>
         </div>
 
@@ -149,7 +208,7 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
             onClick={handleLevelUp}
             disabled={gains.stats > 0 && selectedAttrs.length < gains.stats}
           >
-            Subir para Nível {nextLevel}
+            {addingNew ? `${selectedClass} — Nível 1` : `${selectedClass} — Nível ${(character.classes.find(ce => ce.name === selectedClass)?.level ?? 0) + 1}`}
           </button>
         </div>
       </div>

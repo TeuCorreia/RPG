@@ -123,6 +123,7 @@ export function CreateCharacter() {
         image: image || undefined,
         species: species.name,
         heroicClass,
+        classes: [{ name: heroicClass, level: 1 }],
         level: 1,
         xp: 0,
         age,

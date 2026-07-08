@@ -2245,17 +2245,24 @@ body {
   background: linear-gradient(to top, var(--bg-primary) 0%, transparent 60%);
 }
 
-.char-card-badge {
+.char-card-badges {
   position: absolute;
   bottom: 12px;
   left: 12px;
-  padding: 4px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.char-card-badge {
+  padding: 4px 10px;
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1px;
   border-radius: 6px;
   backdrop-filter: blur(8px);
+  white-space: nowrap;
 }
 
 .char-card-body {
@@ -3366,6 +3373,8 @@ body {
   border-color: var(--accent);
 }
 
+
+
 .sheet-btn-levelup:not(:disabled):hover {
   opacity: 0.85;
 }
@@ -3504,6 +3513,59 @@ body {
 
 .levelup-stats {
   flex-direction: column;
+}
+
+.levelup-class-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.levelup-class-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 18px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.levelup-class-btn .class-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.levelup-class-btn .class-level {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.levelup-class-btn.selected {
+  background: rgba(74, 125, 255, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.levelup-class-btn.selected .class-level {
+  color: var(--accent);
+}
+
+.levelup-class-add {
+  border-style: dashed;
+  border-color: var(--text-muted);
+  background: transparent;
+}
+
+.levelup-class-add:hover {
+  border-color: var(--accent);
+  background: rgba(74, 125, 255, 0.08);
 }
 
 /* Modal Base */

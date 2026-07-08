@@ -1,4 +1,4 @@
-import type { SkillName, AttributeName, HeroicClass } from '../types';
+import type { SkillName, AttributeName, HeroicClass, ClassEntry } from '../types';
 
 interface SkillData {
   name: SkillName;
@@ -144,20 +144,35 @@ export const skillsData: SkillData[] = [
   }
 ];
 
-export function getClassSkills(heroicClass: HeroicClass): SkillName[] {
-  if (heroicClass === 'Mundano') {
+function getClassNames(classes: HeroicClass | ClassEntry[]): HeroicClass[] {
+  if (Array.isArray(classes)) return classes.map(c => c.name);
+  return [classes];
+}
+
+function classSkillFilter(skill: SkillName, classNames: HeroicClass[]): boolean {
+  if (classNames.includes('Mundano')) return skill !== 'Usar a Força';
+  return classNames.some(cn => skillsData.find(s => s.name === skill)?.classFor.includes(cn));
+}
+
+export function getClassSkills(classes: HeroicClass | ClassEntry[]): SkillName[] {
+  const classNames = getClassNames(classes);
+  if (classNames.includes('Mundano')) {
     return skillsData
       .filter(s => s.name !== 'Usar a Força')
       .map(s => s.name);
   }
-  return skillsData
-    .filter(s => s.classFor.includes(heroicClass))
-    .map(s => s.name);
+  const result = new Set<SkillName>();
+  for (const cn of classNames) {
+    skillsData
+      .filter(s => s.classFor.includes(cn))
+      .forEach(s => result.add(s.name));
+  }
+  return Array.from(result);
 }
 
-export function isClassSkill(skill: SkillName, heroicClass: HeroicClass): boolean {
-  if (heroicClass === 'Mundano') return skill !== 'Usar a Força';
-  return skillsData.find(s => s.name === skill)?.classFor.includes(heroicClass) ?? false;
+export function isClassSkill(skill: SkillName, classes: HeroicClass | ClassEntry[]): boolean {
+  const classNames = getClassNames(classes);
+  return classSkillFilter(skill, classNames);
 }
 
 export function getSkillKeyAbility(skill: SkillName): AttributeName {

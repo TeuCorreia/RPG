@@ -113,7 +113,9 @@ export function CharacterSheet() {
         <h1 className="sheet-name">{c.name}</h1>
         <div className="sheet-badges">
           <span className="sheet-badge sheet-badge-species">{c.species}</span>
-          <span className="sheet-badge sheet-badge-class">{c.heroicClass}</span>
+          {c.classes.map(ce => (
+            <span key={ce.name} className="sheet-badge sheet-badge-class">{ce.name} {ce.level}</span>
+          ))}
           <span className="sheet-badge sheet-badge-neutral">Nível {c.level}</span>
           <span className="sheet-badge sheet-badge-neutral">XP: {c.xp}</span>
           {c.credits > 0 && <span className="sheet-badge sheet-badge-credits">{c.credits} Cr</span>}

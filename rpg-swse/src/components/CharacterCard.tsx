@@ -19,7 +19,8 @@ const classColors: Record<string, string> = {
 export function CharacterCard({ character, onClick, onDelete }: Props) {
   const maxHp = calculateMaxHp(character);
   const maxFp = 5 + Math.floor(character.level / 2);
-  const color = classColors[character.heroicClass] || '#4a7dff';
+  const primary = character.classes.reduce((a, b) => a.level >= b.level ? a : b);
+  const color = classColors[primary.name] || '#4a7dff';
   const hpPct = Math.min(100, Math.round((character.currentHp / maxHp) * 100));
   const xpNeeded = character.level * 1000;
   const xpPct = Math.min(100, Math.round((character.xp / xpNeeded) * 100));
@@ -53,8 +54,20 @@ export function CharacterCard({ character, onClick, onDelete }: Props) {
           </div>
         )}
         <div className="char-card-image-fade" />
-        <div className="char-card-badge" style={{ background: `${color}33`, color, border: `1px solid ${color}55` }}>
-          {character.heroicClass}
+        <div className="char-card-badges">
+          {character.classes.map(ce => (
+            <span
+              key={ce.name}
+              className="char-card-badge"
+              style={{
+                background: `${classColors[ce.name] || '#4a7dff'}33`,
+                color: classColors[ce.name] || '#4a7dff',
+                border: `1px solid ${classColors[ce.name] || '#4a7dff'}55`,
+              }}
+            >
+              {ce.name} {ce.level}
+            </span>
+          ))}
         </div>
       </div>
       <div className="char-card-body">

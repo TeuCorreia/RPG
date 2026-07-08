@@ -70,6 +70,11 @@ export interface Equipment {
   description?: string;
 }
 
+export interface ClassEntry {
+  name: HeroicClass;
+  level: number;
+}
+
 export interface Character {
   id: string;
   userId: string;
@@ -77,6 +82,7 @@ export interface Character {
   species: string;
   image?: string;
   heroicClass: HeroicClass;
+  classes: ClassEntry[];
   level: number;
   xp: number;
   age: number;

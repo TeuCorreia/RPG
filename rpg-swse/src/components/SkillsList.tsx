@@ -102,7 +102,7 @@ export function SkillsList({ character, onToggleSkill, onRollSkill, onSkillBonus
                     const override = character.skillOverrides?.[skillName];
                     const bonus = override ?? calcBonus;
                     const modStr = bonus >= 0 ? `+${bonus}` : `${bonus}`;
-                    const isClassSkill = checkClassSkill(skillName, character.heroicClass);
+                    const isClassSkill = checkClassSkill(skillName, character.classes);
                     const canUseUntrained = skillData.untrainedUse;
                     const usable = trained || canUseUntrained;
 

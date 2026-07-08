@@ -23,10 +23,17 @@ export function clearSession(): void {
   localStorage.removeItem(SESSION_KEY);
 }
 
+export function migrateCharacter(c: any) {
+  if (!c.classes) {
+    c.classes = [{ name: c.heroicClass, level: c.level }];
+  }
+  return c;
+}
+
 export function getCharacters(userId: string) {
   const data = localStorage.getItem(CHARACTERS_KEY);
   const all = data ? JSON.parse(data) : {};
-  return all[userId] || [];
+  return (all[userId] || []).map(migrateCharacter);
 }
 
 export function saveCharacter(userId: string, character: any): void {
@@ -50,5 +57,9 @@ export function deleteCharacter(userId: string, characterId: string): void {
 
 export function getAllCharacters() {
   const data = localStorage.getItem(CHARACTERS_KEY);
-  return data ? JSON.parse(data) : {};
+  const all = data ? JSON.parse(data) : {};
+  for (const userId of Object.keys(all)) {
+    all[userId] = all[userId].map(migrateCharacter);
+  }
+  return all;
 }

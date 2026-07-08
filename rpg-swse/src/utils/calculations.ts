@@ -1,4 +1,4 @@
-import type { Attributes, SkillName, HeroicClass, Character } from '../types';
+import type { Attributes, SkillName, HeroicClass, Character, ClassEntry } from '../types';
 import { classList } from '../data/classes';
 import { getSkillKeyAbility } from '../data/skills';
 
@@ -6,18 +6,25 @@ export function getAbilityModifier(score: number): number {
   return Math.floor((score - 10) / 2);
 }
 
-export function getDefenseBonus(heroicClass: HeroicClass, defense: 'reflex' | 'fortitude' | 'will', level: number): number {
+export function getClassDefenseBonus(heroicClass: HeroicClass, defense: 'reflex' | 'fortitude' | 'will'): number {
   const cls = classList.find(c => c.name === heroicClass);
   if (!cls) return 0;
-  const bonus = cls.defenseBonuses[defense];
-  return bonus + Math.floor(level / 2);
+  return cls.defenseBonuses[defense];
+}
+
+export function getTotalDefenseBonus(classes: ClassEntry[], defense: 'reflex' | 'fortitude' | 'will', totalLevel: number): number {
+  let sum = 0;
+  for (const entry of classes) {
+    sum += getClassDefenseBonus(entry.name, defense);
+  }
+  return sum + Math.floor(totalLevel / 2);
 }
 
 export function calculateDefense(
   type: 'reflex' | 'fortitude' | 'will',
   character: Character
 ): number {
-  const { attributes, heroicClass, level } = character;
+  const { attributes, classes, level } = character;
   const attrMap: Record<string, keyof Attributes> = {
     reflex: 'DEX',
     fortitude: 'CON',
@@ -25,7 +32,7 @@ export function calculateDefense(
   };
   const attr = attrMap[type];
   const mod = getAbilityModifier(attributes[attr]);
-  const classBonus = getDefenseBonus(heroicClass, type, level);
+  const classBonus = getTotalDefenseBonus(classes, type, level);
   return 10 + mod + classBonus;
 }
 
@@ -42,11 +49,17 @@ export function calculateSkillModifier(
 }
 
 export function calculateMaxHp(character: Character): number {
-  const { heroicClass, level, attributes } = character;
-  const cls = classList.find(c => c.name === heroicClass);
-  if (!cls) return 0;
+  const { classes, attributes } = character;
   const conMod = getAbilityModifier(attributes.CON);
-  return cls.hpPerLevel + conMod + (level - 1) * (cls.hpPerLevel / 2 + conMod);
+  let total = 0;
+  for (const entry of classes) {
+    const cls = classList.find(c => c.name === entry.name);
+    if (!cls) continue;
+    if (entry.level === 0) continue;
+    total += cls.hpPerLevel + conMod;
+    total += (entry.level - 1) * (Math.floor(cls.hpPerLevel / 2) + conMod);
+  }
+  return Math.max(0, total);
 }
 
 export function calculateDamageThreshold(character: Character): number {
