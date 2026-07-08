@@ -64,3 +64,24 @@ export function calculateForcePoints(level: number): number {
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
+
+export function calculateXpForLevel(level: number): number {
+  return (level * (level - 1) / 2) * 1000;
+}
+
+export function getHpGain(heroicClass: HeroicClass, conMod: number): number {
+  const cls = classList.find(c => c.name === heroicClass);
+  if (!cls) return 0;
+  return Math.floor(cls.hpPerLevel / 2) + conMod;
+}
+
+export function getLevelUpGains(level: number): { feat: boolean; talent: boolean; stats: number } {
+  const featLevels = [1, 3, 6, 8, 10, 12, 14, 16, 18, 20];
+  const talentLevels = [1, 2, 5, 7, 9, 11, 13, 15, 17, 19];
+  const statLevels = [4, 8, 12, 16, 20];
+  return {
+    feat: featLevels.includes(level),
+    talent: talentLevels.includes(level),
+    stats: statLevels.includes(level) ? 2 : 0,
+  };
+}

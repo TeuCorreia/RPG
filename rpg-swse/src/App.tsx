@@ -6,6 +6,7 @@ import { Dashboard } from './pages/Dashboard';
 import { CreateCharacter } from './pages/CreateCharacter';
 import { CharacterSheet } from './pages/CharacterSheet';
 import { About } from './pages/About';
+import { LevelProgression } from './pages/LevelProgression';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
@@ -21,6 +22,7 @@ function AppRoutes() {
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route path="/character/new" element={<ProtectedRoute><CreateCharacter /></ProtectedRoute>} />
         <Route path="/character/:id" element={<ProtectedRoute><CharacterSheet /></ProtectedRoute>} />
+        <Route path="/progression" element={<ProtectedRoute><LevelProgression /></ProtectedRoute>} />
         <Route path="/about" element={<ProtectedRoute><About /></ProtectedRoute>} />
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />

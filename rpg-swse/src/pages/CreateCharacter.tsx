@@ -4,8 +4,8 @@ import type { AttributeName, SkillName, HeroicClass, Attributes } from '../types
 import { useCharacters } from '../hooks/useCharacter';
 import { speciesList } from '../data/species';
 import { classList } from '../data/classes';
-import { getClassSkills } from '../data/skills';
-import { getAbilityModifier } from '../utils/calculations';
+import { getClassSkills, getSkillKeyAbility, skillsData, isClassSkill as checkClassSkill } from '../data/skills';
+import { getAbilityModifier, calculateSkillModifier } from '../utils/calculations';
 import { AttributeBlock } from '../components/AttributeBlock';
 
 const steps = ['Geral', 'Atributos', 'Classe', 'Perícias', 'Equipamento', 'Revisão'];
@@ -18,12 +18,26 @@ const allSkills: SkillName[] = [
   'Tratar Ferimentos', 'Usar Computador', 'Usar a Força'
 ];
 
+const attrLabels: Record<string, string> = {
+  STR: 'Força', DEX: 'Destreza', CON: 'Constituição',
+  INT: 'Inteligência', WIS: 'Sabedoria', CHA: 'Carisma',
+};
+
+function groupSkillsByAbility(skills: SkillName[]): [AttributeName, SkillName[]][] {
+  const groups = new Map<AttributeName, SkillName[]>();
+  for (const skill of skills) {
+    const keyAbility = getSkillKeyAbility(skill);
+    if (!groups.has(keyAbility)) groups.set(keyAbility, []);
+    groups.get(keyAbility)!.push(skill);
+  }
+  return Array.from(groups.entries()).sort(([a], [b]) => a.localeCompare(b));
+}
+
 const speciesColors: Record<string, string> = {
   'Humano': '#4a7dff',
   'Bothan': '#8b5cf6',
   'Cereano': '#06b6d4',
   'Droide': '#64748b',
-  'Dug': '#f59e0b',
   'Ewok': '#84cc16',
   'Gungan': '#10b981',
   'Ithoriano': '#22c55e',
@@ -79,6 +93,10 @@ export function CreateCharacter() {
   }
 
   function toggleSkill(skill: SkillName) {
+    if (!checkClassSkill(skill, heroicClass)) {
+      setError(`${skill} não é uma perícia de classe disponível.`);
+      return;
+    }
     setTrainedSkills(prev => {
       if (prev.includes(skill)) return prev.filter(s => s !== skill);
       if (prev.length >= maxTrained) {
@@ -121,6 +139,7 @@ export function CreateCharacter() {
         inventory: [],
         credits,
         currentHp: selectedClass.hpPerLevel + getAbilityModifier(applied.CON),
+        currentFp: 5 + Math.floor(1 / 2),
         currentCondition: 0,
         appearance,
         background,
@@ -251,30 +270,99 @@ export function CreateCharacter() {
         </div>
       );
 
-      case 3: return (
-        <div className="step-content">
-          <h2>Perícias</h2>
-          <p>Selecione até <strong>{maxTrained}</strong> perícias treinadas (mín. 1). Perícias de classe em destaque.</p>
-          {error && <p className="error-msg">{error}</p>}
-          <div className="skills-selection">
-            {allSkills.map(skill => {
-              const isClassSkill = classSkills.includes(skill);
-              const isTrained = trainedSkills.includes(skill);
-              return (
-                <label key={skill} className={`skill-option ${isClassSkill ? 'class-skill' : ''} ${isTrained ? 'trained' : ''}`}>
-                  <input
-                    type="checkbox"
-                    checked={isTrained}
-                    disabled={!isClassSkill}
-                    onChange={() => toggleSkill(skill)}
-                  />
-                  {skill} {isClassSkill ? '(Classe)' : ''}
-                </label>
-              );
-            })}
+      case 3: {
+        const skillGroups = groupSkillsByAbility(allSkills);
+        const trainedCount = trainedSkills.length;
+        return (
+          <div className="step-content">
+            <h2>Perícias</h2>
+            <p>Selecione as perícias treinadas. Apenas perícias de classe podem ser escolhidas no 1º nível.</p>
+            {error && <p className="error-msg">{error}</p>}
+
+            <div className="skill-progress">
+              <div className="skill-progress-header">
+                <span>Perícias Treinadas</span>
+                <span className="skill-progress-count">{trainedCount} / {maxTrained}</span>
+              </div>
+              <div className="skill-progress-track">
+                <div
+                  className="skill-progress-fill"
+                  style={{ width: `${Math.min(100, (trainedCount / maxTrained) * 100)}%` }}
+                />
+              </div>
+              {trainedCount < 1 && (
+                <div className="skill-progress-hint">Mínimo de 1 perícia treinada exigido</div>
+              )}
+              {trainedCount === maxTrained && (
+                <div className="skill-progress-hint max">Máximo atingido! Remova alguma perícia para adicionar outra.</div>
+              )}
+            </div>
+
+            <div className="skill-groups">
+              {skillGroups.map(([ability, skills]) => (
+                <details key={ability} className="skill-group" open>
+                  <summary className="skill-group-header">
+                    <span className="skill-group-ability">{ability}</span>
+                    <span className="skill-group-label">{attrLabels[ability]}</span>
+                    <span className="skill-group-count">
+                      {skills.filter(s => trainedSkills.includes(s)).length}/{skills.length}
+                    </span>
+                  </summary>
+                  <div className="skill-group-body">
+                    {skills.map(skill => {
+                      const isClassSkill = classSkills.includes(skill);
+                      const isTrained = trainedSkills.includes(skill);
+                      const flatChar = {
+                        attributes: getAppliedAttributes(),
+                        trainedSkills,
+                        level: 1,
+                        heroicClass,
+                        currentHp: 0, currentCondition: 0, xp: 0,
+                        id: '', userId: '', name: '', species: '',
+                        age: 0, gender: '', height: '', weight: '',
+                        feats: [], talents: [], forcePowers: [],
+                        weapons: [], armor: null, inventory: [],
+                        credits: 0, appearance: '', background: '',
+                        createdAt: 0, updatedAt: 0,
+                      };
+                      const bonus = calculateSkillModifier(skill, flatChar as any);
+                      const modStr = bonus >= 0 ? `+${bonus}` : `${bonus}`;
+                      const skillData = skillsData.find(s => s.name === skill);
+                      return (
+                        <label
+                          key={skill}
+                          className={`skill-group-item ${isClassSkill ? 'class' : 'locked'} ${isTrained ? 'trained' : ''}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isTrained}
+                            disabled={!isClassSkill}
+                            onChange={() => toggleSkill(skill)}
+                          />
+                          <div className="skill-group-item-info">
+                            <span className="skill-group-item-name">{skill}</span>
+                            <span className={`skill-group-item-bonus ${bonus >= 0 ? 'positive' : 'negative'}`}>
+                              {modStr}
+                            </span>
+                          </div>
+                          <div className="skill-group-item-desc">
+                            {skillData?.description}
+                          </div>
+                          <div className="skill-group-item-tags">
+                            {isClassSkill && <span className="skill-tag class">Classe</span>}
+                            {!isClassSkill && <span className="skill-tag locked">Bloqueada</span>}
+                            {!skillData?.untrainedUse && <span className="skill-tag untrained">Só Treinado</span>}
+                          </div>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </details>
+              ))}
+            </div>
           </div>
-        </div>
-      );
+        );
+      }
 
       case 4: return (
         <div className="step-content">

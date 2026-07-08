@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 
 const navItems = [
   { path: '/dashboard', icon: 'person_search', label: 'Personagens' },
+  { path: '/progression', icon: 'trending_up', label: 'Níveis' },
   { path: '/about', icon: 'auto_stories', label: 'Sobre' },
 ];
 
@@ -94,6 +95,10 @@ export function Layout() {
         <Link to="/dashboard" className={`bottom-nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
           <span className="icon">home</span>
           <span>Home</span>
+        </Link>
+        <Link to="/progression" className={`bottom-nav-link ${isActive('/progression') ? 'active' : ''}`}>
+          <span className="icon">trending_up</span>
+          <span>Níveis</span>
         </Link>
         <Link to="/about" className={`bottom-nav-link ${isActive('/about') ? 'active' : ''}`}>
           <span className="icon">group</span>

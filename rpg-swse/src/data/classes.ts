@@ -50,5 +50,21 @@ export const classList: ClassData[] = [
     trainedSkills: 3,
     classSkills: ['Escalar', 'Resistência', 'Iniciativa', 'Salto', 'Conhecimento', 'Mecânica', 'Percepção', 'Pilotagem', 'Nadar', 'Usar Computador'],
     talentTrees: ['Armadura', 'Comando', 'Arma Pesada', 'Especialista em Armas']
+  },
+  {
+    name: 'Mundano',
+    description: 'Mundanos são pessoas comuns sem treinamento formal de combate ou habilidades excepcionais. Podem ser fazendeiros, mecânicos, comerciantes ou qualquer cidadão comum da galáxia. Sua força está na versatilidade — podem aprender qualquer perícia básica, mas jamais dominar a Força.',
+    keyAbilities: ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'],
+    hpPerLevel: 4,
+    defenseBonuses: { reflex: 0, fortitude: 0, will: 0 },
+    trainedSkills: 4,
+    classSkills: [
+      'Acrobacia', 'Escalar', 'Enganação', 'Resistência',
+      'Obter Informação', 'Iniciativa', 'Salto', 'Conhecimento',
+      'Mecânica', 'Percepção', 'Persuasão', 'Pilotagem',
+      'Montaria', 'Furtividade', 'Sobrevivência', 'Nadar',
+      'Tratar Ferimentos', 'Usar Computador'
+    ],
+    talentTrees: ['Sobrevivente']
   }
 ];

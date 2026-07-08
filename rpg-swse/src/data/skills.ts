@@ -145,9 +145,19 @@ export const skillsData: SkillData[] = [
 ];
 
 export function getClassSkills(heroicClass: HeroicClass): SkillName[] {
+  if (heroicClass === 'Mundano') {
+    return skillsData
+      .filter(s => s.name !== 'Usar a Força')
+      .map(s => s.name);
+  }
   return skillsData
     .filter(s => s.classFor.includes(heroicClass))
     .map(s => s.name);
+}
+
+export function isClassSkill(skill: SkillName, heroicClass: HeroicClass): boolean {
+  if (heroicClass === 'Mundano') return skill !== 'Usar a Força';
+  return skillsData.find(s => s.name === skill)?.classFor.includes(heroicClass) ?? false;
 }
 
 export function getSkillKeyAbility(skill: SkillName): AttributeName {

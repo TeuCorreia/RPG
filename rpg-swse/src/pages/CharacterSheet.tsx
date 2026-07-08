@@ -7,7 +7,9 @@ import { AttributeBlock } from '../components/AttributeBlock';
 import { SkillsList } from '../components/SkillsList';
 import { ConditionTracker } from '../components/ConditionTracker';
 import { DiceRoller } from '../components/DiceRoller';
-import { calculateDefense, calculateMaxHp, calculateSkillModifier, calculateForcePoints, getAbilityModifier } from '../utils/calculations';
+import { LevelUpModal } from '../components/LevelUpModal';
+import { calculateDefense, calculateMaxHp, calculateSkillModifier, calculateForcePoints, getAbilityModifier, calculateXpForLevel } from '../utils/calculations';
+import { speciesList } from '../data/species';
 
 type Tab = 'combate' | 'habilidades' | 'rituais' | 'inventario' | 'descricao';
 
@@ -22,6 +24,7 @@ export function CharacterSheet() {
   const [newWeapon, setNewWeapon] = useState<Weapon>({ name: '', attackBonus: 0, damage: '', critRange: '20', type: '', weight: 0 });
   const [newItem, setNewItem] = useState({ name: '', quantity: 1, weight: 0 });
   const [showRoller, setShowRoller] = useState(false);
+  const [showLevelUp, setShowLevelUp] = useState(false);
 
   useEffect(() => {
     setChar(getById(id || ''));
@@ -35,13 +38,21 @@ export function CharacterSheet() {
   );
 
   const c = char;
-  const maxHp = calculateMaxHp(c);
-  const maxFp = calculateForcePoints(c.level);
+  const baseMaxHp = calculateMaxHp(c);
+  const baseMaxFp = calculateForcePoints(c.level);
+  const maxHp = c.hpOverride ?? baseMaxHp;
+  const maxFp = c.fpOverride ?? baseMaxFp;
+  const baseDefenses = {
+    reflex: calculateDefense('reflex', c),
+    fortitude: calculateDefense('fortitude', c),
+    will: calculateDefense('will', c),
+  };
   const defenses = [
-    { label: 'Reflexo', value: calculateDefense('reflex', c) },
-    { label: 'Fortitude', value: calculateDefense('fortitude', c) },
-    { label: 'Vontade', value: calculateDefense('will', c) },
+    { key: 'reflex' as const, label: 'Reflexo', value: c.reflexOverride ?? baseDefenses.reflex },
+    { key: 'fortitude' as const, label: 'Fortitude', value: c.fortitudeOverride ?? baseDefenses.fortitude },
+    { key: 'will' as const, label: 'Vontade', value: c.willOverride ?? baseDefenses.will },
   ];
+  const overrideMap: Record<string, string> = { reflex: 'reflexOverride', fortitude: 'fortitudeOverride', will: 'willOverride' };
   const hpPct = Math.min(100, Math.round((c.currentHp / maxHp) * 100));
   const conditionLabels = ['Normal', 'Lento', 'Atordoado', 'Inconsciente'];
   const attrLabels: Record<AttributeName, string> = { STR: 'Força', DEX: 'Destreza', CON: 'Constituição', INT: 'Inteligência', WIS: 'Sabedoria', CHA: 'Carisma' };
@@ -85,8 +96,8 @@ export function CharacterSheet() {
 
   const tabs: { key: Tab; label: string; icon: string }[] = [
     { key: 'combate', label: 'Combate', icon: 'swords' },
-    { key: 'habilidades', label: 'Habilidades', icon: 'psychology' },
-    { key: 'rituais', label: 'Rituais', icon: 'auto_stories' },
+    { key: 'habilidades', label: 'Perícias', icon: 'psychology' },
+    { key: 'rituais', label: 'Habilidades', icon: 'auto_stories' },
     { key: 'inventario', label: 'Inventário', icon: 'inventory_2' },
     { key: 'descricao', label: 'Descrição', icon: 'description' },
   ];
@@ -107,6 +118,41 @@ export function CharacterSheet() {
           <span className="sheet-badge sheet-badge-neutral">XP: {c.xp}</span>
           {c.credits > 0 && <span className="sheet-badge sheet-badge-credits">{c.credits} Cr</span>}
         </div>
+
+        {/* XP Bar */}
+        <div className="sheet-xp-bar">
+          {editMode ? (
+            <div className="sheet-xp-edit">
+              <span className="sheet-xp-label">XP:</span>
+              <input
+                type="number"
+                className="sheet-xp-input"
+                value={c.xp}
+                onChange={e => updateChar({ xp: Math.max(0, parseInt(e.target.value) || 0) })}
+                min={0}
+              />
+            </div>
+          ) : (
+            <>
+              <div className="sheet-xp-track">
+                <div
+                  className="sheet-xp-fill"
+                  style={{ width: `${c.level >= 20 ? 100 : Math.min(100, ((c.xp - calculateXpForLevel(c.level)) / (calculateXpForLevel(c.level + 1) - calculateXpForLevel(c.level))) * 100)}%` }}
+                />
+              </div>
+              <span className="sheet-xp-label">
+                {c.xp} / {c.level >= 20 ? '—' : calculateXpForLevel(c.level + 1)} XP
+              </span>
+              {c.level < 20 && (
+                <button className="sheet-btn sheet-btn-levelup" onClick={() => setShowLevelUp(true)} disabled={c.xp < calculateXpForLevel(c.level + 1)}>
+                  <span className="icon" style={{ fontSize: 18, color: 'var(--gold)' }}>trending_up</span>
+                  Subir
+                </button>
+              )}
+            </>
+          )}
+        </div>
+
         <div className="sheet-actions">
           <button className="sheet-btn" onClick={() => setEditMode(!editMode)}>
             <span className="icon" style={{ fontSize: 18 }}>{editMode ? 'visibility' : 'edit'}</span>
@@ -175,25 +221,79 @@ export function CharacterSheet() {
               <section className="sheet-panel hp-bar-section">
                 <div className="hp-header">
                   <span className="hp-header-label">HP</span>
-                  <span className="hp-header-value">{c.currentHp} <span>/ {maxHp}</span></span>
+                  <span className="hp-header-value">
+                    {editMode ? (
+                      <input
+                        type="number"
+                        className="hp-edit-input"
+                        value={c.currentHp}
+                        onChange={e => updateChar({ currentHp: parseInt(e.target.value) || 0 })}
+                      />
+                    ) : (
+                      <span className="hp-current">{c.currentHp}</span>
+                    )}
+                    <span className="hp-sep">/</span>
+                    {editMode ? (
+                      <input
+                        type="number"
+                        className="hp-edit-input hp-edit-input-max"
+                        value={maxHp}
+                        onChange={e => updateChar({ hpOverride: parseInt(e.target.value) || 0 })}
+                      />
+                    ) : (
+                      <span className="hp-max">{maxHp}</span>
+                    )}
+                  </span>
                 </div>
                 <div className="hp-bar-track">
                   <div className="hp-bar-fill hp" style={{ width: `${hpPct}%` }} />
                 </div>
-                {editMode && (
-                  <input
-                    type="number"
-                    value={c.currentHp}
-                    onChange={e => updateChar({ currentHp: parseInt(e.target.value) || 0 })}
-                    style={{ marginTop: 8, width: '100%', textAlign: 'center', fontSize: 16 }}
-                  />
-                )}
+                <div className="hp-controls">
+                  <button className="inc-btn" onClick={() => updateChar({ currentHp: Math.max(0, c.currentHp - 1) })} title="-1 HP">
+                    <span className="icon">remove</span>
+                  </button>
+                  <button className="inc-btn inc-btn-heal" onClick={() => updateChar({ currentHp: c.currentHp + 1 })} title="+1 HP">
+                    <span className="icon">add</span>
+                  </button>
+                </div>
               </section>
-              <section className="sheet-panel">
-                <div className="fp-display">
-                  <h3>Força (Pontos)</h3>
-                  <div className="fp-value">{maxFp}</div>
-                  <div className="fp-max">Máximo: {maxFp}</div>
+              <section className="sheet-panel hp-bar-section">
+                <div className="hp-header">
+                  <span className="hp-header-label">FP</span>
+                  <span className="hp-header-value">
+                    {editMode ? (
+                      <input
+                        type="number"
+                        className="hp-edit-input"
+                        value={c.currentFp ?? maxFp}
+                        onChange={e => updateChar({ currentFp: parseInt(e.target.value) || 0 })}
+                      />
+                    ) : (
+                      <span className="hp-current">{c.currentFp ?? maxFp}</span>
+                    )}
+                    <span className="hp-sep">/</span>
+                    {editMode ? (
+                      <input
+                        type="number"
+                        className="hp-edit-input hp-edit-input-max"
+                        value={maxFp}
+                        onChange={e => updateChar({ fpOverride: parseInt(e.target.value) || 0 })}
+                      />
+                    ) : (
+                      <span className="hp-max">{maxFp}</span>
+                    )}
+                  </span>
+                </div>
+                <div className="hp-bar-track">
+                  <div className="hp-bar-fill fp" style={{ width: `${Math.min(100, ((c.currentFp ?? maxFp) / maxFp) * 100)}%` }} />
+                </div>
+                <div className="hp-controls">
+                  <button className="inc-btn" onClick={() => updateChar({ currentFp: Math.max(0, (c.currentFp ?? maxFp) - 1) })} title="-1 FP">
+                    <span className="icon">remove</span>
+                  </button>
+                  <button className="inc-btn inc-btn-fp" onClick={() => updateChar({ currentFp: (c.currentFp ?? maxFp) + 1 })} title="+1 FP">
+                    <span className="icon">add</span>
+                  </button>
                 </div>
               </section>
             </div>
@@ -224,13 +324,30 @@ export function CharacterSheet() {
               <div className="defense-grid-v2">
                 {defenses.map(d => (
                   <div key={d.label} className="defense-circle">
-                    <div className="defense-circle-ring">
-                      <span className="defense-value">{d.value}</span>
-                      <div className="defense-icon">
-                        <span className="icon">{defenseIcons[d.label]}</span>
+                    {editMode ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+                        <input
+                          type="number"
+                          className="hp-edit-input"
+                          style={{ width: 56, fontSize: 18 }}
+                          value={d.value}
+                          onChange={e => {
+                            updateChar({ [overrideMap[d.key]]: parseInt(e.target.value) || 0 });
+                          }}
+                        />
+                        <span className="defense-circle-label">{d.label}</span>
                       </div>
-                    </div>
-                    <span className="defense-circle-label">{d.label}</span>
+                    ) : (
+                      <>
+                        <div className="defense-circle-ring">
+                          <span className="defense-value">{d.value}</span>
+                          <div className="defense-icon">
+                            <span className="icon">{defenseIcons[d.label]}</span>
+                          </div>
+                        </div>
+                        <span className="defense-circle-label">{d.label}</span>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
@@ -302,6 +419,11 @@ export function CharacterSheet() {
                     : [...c.trainedSkills, skill]
                 });
               }}
+              onSkillBonusChange={(skill, value) => {
+                updateChar({
+                  skillOverrides: { ...c.skillOverrides, [skill]: value }
+                });
+              }}
               onRollSkill={handleRollSkill}
               editable={editMode}
             />
@@ -312,6 +434,18 @@ export function CharacterSheet() {
       {tab === 'rituais' && (
         <section className="sheet-panel">
           <div className="feats-grid">
+            <div className="feat-group">
+              <h3>{c.species}</h3>
+              {(() => {
+                const speciesData = speciesList.find(s => s.name === c.species);
+                if (!speciesData || speciesData.specialAbilities.length === 0) return <p className="empty-text">Nenhuma habilidade especial</p>;
+                return speciesData.specialAbilities.map((a, i) => (
+                  <div key={i} className="feat-item">
+                    <strong>{a.name}:</strong> {a.description}
+                  </div>
+                ));
+              })()}
+            </div>
             <div className="feat-group">
               <h3>Feats</h3>
               {c.feats.length === 0 ? (
@@ -372,13 +506,45 @@ export function CharacterSheet() {
         <div className="desc-section">
           <section className="sheet-panel" style={{ marginBottom: 16 }}>
             <h3>Aparência</h3>
-            <p>{c.appearance || <span className="empty-text">Nenhuma descrição</span>}</p>
+            {editMode ? (
+              <textarea
+                className="desc-textarea"
+                value={c.appearance || ''}
+                onChange={e => updateChar({ appearance: e.target.value })}
+                rows={4}
+                placeholder="Descreva a aparência do seu personagem..."
+              />
+            ) : (
+              <p>{c.appearance || <span className="empty-text">Nenhuma descrição</span>}</p>
+            )}
           </section>
           <section className="sheet-panel">
             <h3>História / Background</h3>
-            <p>{c.background || <span className="empty-text">Nenhuma história</span>}</p>
+            {editMode ? (
+              <textarea
+                className="desc-textarea"
+                value={c.background || ''}
+                onChange={e => updateChar({ background: e.target.value })}
+                rows={6}
+                placeholder="Conte a história do seu personagem..."
+              />
+            ) : (
+              <p>{c.background || <span className="empty-text">Nenhuma história</span>}</p>
+            )}
           </section>
         </div>
+      )}
+
+      {/* Level Up Modal */}
+      {showLevelUp && (
+        <LevelUpModal
+          character={c}
+          onConfirm={(updates) => {
+            updateChar(updates);
+            setShowLevelUp(false);
+          }}
+          onClose={() => setShowLevelUp(false)}
+        />
       )}
 
       {/* Dice Roller */}

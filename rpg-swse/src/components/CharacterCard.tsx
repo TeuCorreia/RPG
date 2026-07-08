@@ -13,6 +13,7 @@ const classColors: Record<string, string> = {
   Vigarista: '#f59e0b',
   Explorador: '#10b981',
   Soldado: '#ef4444',
+  Mundano: '#94a3b8',
 };
 
 export function CharacterCard({ character, onClick, onDelete }: Props) {

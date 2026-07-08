@@ -1,6 +1,6 @@
 export type AttributeName = 'STR' | 'DEX' | 'CON' | 'INT' | 'WIS' | 'CHA';
 
-export type HeroicClass = 'Jedi' | 'Nobre' | 'Vigarista' | 'Explorador' | 'Soldado';
+export type HeroicClass = 'Jedi' | 'Nobre' | 'Vigarista' | 'Explorador' | 'Soldado' | 'Mundano';
 
 export type SkillName =
   | 'Acrobacia' | 'Escalar' | 'Enganação' | 'Resistência'
@@ -93,6 +93,13 @@ export interface Character {
   inventory: Equipment[];
   credits: number;
   currentHp: number;
+  currentFp: number;
+  skillOverrides?: Partial<Record<SkillName, number>>;
+  hpOverride?: number;
+  fpOverride?: number;
+  reflexOverride?: number;
+  fortitudeOverride?: number;
+  willOverride?: number;
   currentCondition: number;
   appearance: string;
   background: string;
