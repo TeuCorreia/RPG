@@ -295,25 +295,39 @@ export default function InventoryList({
       {showCatalog && (
         <div className="catalog-modal">
           <div className="catalog-modal-content">
-            <h3>Catálogo de Equipamentos</h3>
-            <button className="close-btn" onClick={() => setShowCatalog(false)}>
-              ×
-            </button>
+            <div className="catalog-header">
+              <h3>Catálogo de Equipamentos</h3>
+              <button onClick={() => setShowCatalog(false)}>×</button>
+            </div>
 
             <div className="catalog-categories">
               {(Object.keys(categoryLabels) as EquipmentCategory[]).map(cat => (
                 <div key={cat} className="catalog-category">
-                  <h4>
-                    {categoryIcons[cat]} {categoryLabels[cat]}
-                  </h4>
+                  <h4>{categoryLabels[cat]}</h4>
                   <div className="catalog-items">
                     {allEquipmentCatalog
                       .filter(item => item.category === cat)
                       .map(item => (
                         <div key={item.id} className="catalog-item">
                           <div className="catalog-item-info">
-                            <span className="catalog-item-name">{item.name}</span>
-                            <span className="catalog-item-cost">{item.cost} Cr</span>
+                            <div className="catalog-item-header">
+                              <strong>{item.name}</strong>
+                            </div>
+                            {item.description && (
+                              <p>{item.description}</p>
+                            )}
+                            <div className="catalog-item-stats">
+                              {item.damage && <span>Dano: {item.damage}</span>}
+                              {item.critRange && <span>Ameaça: {item.critRange}</span>}
+                              {item.range && <span>Alcance: {item.range}</span>}
+                              {item.reflexBonus !== undefined && (
+                                <span>Reflexo: +{item.reflexBonus}</span>
+                              )}
+                              {item.maxDexBonus !== undefined && (
+                                <span>Max DEX: +{item.maxDexBonus}</span>
+                              )}
+                              {item.weight > 0 && <span>{item.weight}kg</span>}
+                            </div>
                           </div>
                           <button
                             className="add-catalog-item-btn"

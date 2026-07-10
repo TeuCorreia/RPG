@@ -201,6 +201,7 @@ export interface Character {
   currentCondition: number;
   appearance: string;
   background: string;
+  notes: string;
   createdAt: number;
   updatedAt: number;
 }

@@ -150,6 +150,7 @@ export function CreateCharacter() {
         currentCondition: 0,
         appearance,
         background,
+        notes: '',
       });
       if (!char) {
         setError('Erro ao criar: você não está autenticado.');
@@ -329,7 +330,7 @@ export function CreateCharacter() {
                         age: 0, gender: '', height: '', weight: '',
                         feats: [], talents: [], forcePowers: [],
                         weapons: [], armor: null, inventory: [],
-                        credits: 0, appearance: '', background: '',
+                        credits: 0, appearance: '', background: '', notes: '',
                         createdAt: 0, updatedAt: 0,
                       };
                       const bonus = calculateSkillModifier(skill, flatChar as any);

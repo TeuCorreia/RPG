@@ -501,6 +501,20 @@ export function CharacterSheet() {
               <p>{c.background || <span className="empty-text">Nenhuma história</span>}</p>
             )}
           </section>
+          <section className="sheet-panel" style={{ marginTop: 16 }}>
+            <h3>Anotações</h3>
+            {editMode ? (
+              <textarea
+                className="desc-textarea"
+                value={c.notes || ''}
+                onChange={e => updateChar({ notes: e.target.value })}
+                rows={4}
+                placeholder="Anotações pessoais, lembretes, planos..."
+              />
+            ) : (
+              <p>{c.notes || <span className="empty-text">Nenhuma anotação</span>}</p>
+            )}
+          </section>
         </div>
       )}
 

@@ -27,6 +27,9 @@ export function migrateCharacter(c: any) {
   if (!c.classes) {
     c.classes = [{ name: c.heroicClass, level: c.level }];
   }
+  if (c.notes === undefined) {
+    c.notes = '';
+  }
   return c;
 }
 
