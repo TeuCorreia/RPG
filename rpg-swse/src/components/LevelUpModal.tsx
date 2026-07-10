@@ -29,8 +29,6 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
   const hpGain = getHpGain(selectedClass, conMod);
   const cls = classList.find(c => c.name === selectedClass);
 
-  const [featName, setFeatName] = useState('');
-  const [talentName, setTalentName] = useState('');
   const [selectedAttrs, setSelectedAttrs] = useState<AttributeName[]>([]);
 
   function toggleAttr(attr: AttributeName) {
@@ -60,13 +58,6 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
       attributes: updatedAttrs,
       currentHp: character.currentHp + hpGain,
     };
-
-    if (featName.trim()) {
-      updates.feats = [...character.feats, featName.trim()];
-    }
-    if (talentName.trim()) {
-      updates.talents = [...character.talents, talentName.trim()];
-    }
 
     onConfirm(updates);
   }
@@ -192,31 +183,21 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
         </div>
 
         {gains.feat && (
-          <div className="levelup-section">
+          <div className="levelup-section levelup-reward">
             <span className="levelup-icon material-symbols-outlined">stars</span>
-            <div style={{ flex: 1 }}>
-              <strong>Novo Feat</strong>
-              <input
-                className="levelup-input"
-                placeholder="Nome do feat..."
-                value={featName}
-                onChange={e => setFeatName(e.target.value)}
-              />
+            <div>
+              <strong>Novo Feat Disponível</strong>
+              <small>Você pode adicionar um novo feat na aba de Habilidades após o level up.</small>
             </div>
           </div>
         )}
 
         {gains.talent && (
-          <div className="levelup-section">
+          <div className="levelup-section levelup-reward">
             <span className="levelup-icon material-symbols-outlined">auto_awesome</span>
-            <div style={{ flex: 1 }}>
-              <strong>Novo Talento</strong>
-              <input
-                className="levelup-input"
-                placeholder="Nome do talento..."
-                value={talentName}
-                onChange={e => setTalentName(e.target.value)}
-              />
+            <div>
+              <strong>Novo Talento Disponível</strong>
+              <small>Você pode adicionar um novo talento na aba de Habilidades após o level up.</small>
             </div>
           </div>
         )}

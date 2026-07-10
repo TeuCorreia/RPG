@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export interface RollResult {
   expression: string;
@@ -7,8 +7,35 @@ export interface RollResult {
   timestamp: number;
 }
 
+export interface DicePreset {
+  id: string;
+  name: string;
+  expression: string;
+  description?: string;
+}
+
+const STORAGE_KEY = 'rpg_swse_dice_presets';
+
+function loadPresets(): DicePreset[] {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored ? JSON.parse(stored) : [];
+  } catch {
+    return [];
+  }
+}
+
+function savePresets(presets: DicePreset[]) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(presets));
+}
+
 export function useDiceRoller() {
   const [history, setHistory] = useState<RollResult[]>([]);
+  const [presets, setPresets] = useState<DicePreset[]>(loadPresets);
+
+  useEffect(() => {
+    savePresets(presets);
+  }, [presets]);
 
   function rollD20(modifier = 0): RollResult {
     const roll = Math.floor(Math.random() * 20) + 1;
@@ -53,9 +80,46 @@ export function useDiceRoller() {
     return entry;
   }
 
+  function rollPreset(presetId: string): RollResult | null {
+    const preset = presets.find(p => p.id === presetId);
+    if (!preset) return null;
+    return rollCustom(preset.expression);
+  }
+
+  function savePreset(name: string, expression: string, description?: string): DicePreset {
+    const newPreset: DicePreset = {
+      id: `preset-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+      name,
+      expression,
+      description,
+    };
+    setPresets(prev => [...prev, newPreset]);
+    return newPreset;
+  }
+
+  function updatePreset(id: string, updates: Partial<DicePreset>) {
+    setPresets(prev =>
+      prev.map(p => (p.id === id ? { ...p, ...updates } : p))
+    );
+  }
+
+  function deletePreset(id: string) {
+    setPresets(prev => prev.filter(p => p.id !== id));
+  }
+
   function clearHistory() {
     setHistory([]);
   }
 
-  return { history, rollD20, rollCustom, clearHistory };
+  return {
+    history,
+    presets,
+    rollD20,
+    rollCustom,
+    rollPreset,
+    savePreset,
+    updatePreset,
+    deletePreset,
+    clearHistory,
+  };
 }

@@ -70,6 +70,98 @@ export interface Equipment {
   description?: string;
 }
 
+// ==================== NOVOS TYPES - INVENTÁRIO ====================
+
+export type EquipmentCategory = 'weapon' | 'armor' | 'gear' | 'consumable' | 'tool';
+
+export interface InventoryItem {
+  id: string;
+  name: string;
+  category: EquipmentCategory;
+  quantity: number;
+  weight: number;
+  cost: number;
+  description?: string;
+  equipped?: boolean;
+  // Para armas
+  attackBonus?: number;
+  damage?: string;
+  critRange?: string;
+  range?: string;
+  // Para armaduras
+  reflexBonus?: number;
+  maxDexBonus?: number;
+  armorCheckPenalty?: number;
+}
+
+export interface EquipmentCatalogItem {
+  id: string;
+  name: string;
+  category: EquipmentCategory;
+  weight: number;
+  cost: number;
+  description: string;
+  // Para armas
+  attackBonus?: number;
+  damage?: string;
+  critRange?: string;
+  range?: string;
+  properties?: string;
+  // Para armaduras
+  reflexBonus?: number;
+  maxDexBonus?: number;
+  armorCheckPenalty?: number;
+}
+
+// ==================== NOVOS TYPES - HABILIDADES ====================
+
+export type AbilitySource = 'species' | 'class' | 'level' | 'custom';
+
+export interface CharacterFeat {
+  id: string;
+  name: string;
+  description: string;
+  prerequisites?: string[];
+  source: AbilitySource;
+  levelGained?: number;
+}
+
+export interface CharacterTalent {
+  id: string;
+  name: string;
+  description: string;
+  tree?: string;
+  prerequisites?: string[];
+  source: AbilitySource;
+  levelGained?: number;
+}
+
+// ==================== NOVOS TYPES - PODERES DA FORÇA ====================
+
+export type ForceSide = 'light' | 'dark' | 'universal';
+
+export interface ForcePowerCatalog {
+  id: string;
+  name: string;
+  description: string;
+  dc: number;
+  cost: number;
+  side: ForceSide;
+  prerequisites?: string[];
+  effect: string;
+  duration?: string;
+  range?: string;
+}
+
+export interface CharacterForcePower {
+  id: string;
+  powerId: string;
+  name: string;
+  description: string;
+  customNotes?: string;
+  timesUsed?: number;
+}
+
 export interface ClassEntry {
   name: HeroicClass;
   level: number;
@@ -91,12 +183,12 @@ export interface Character {
   weight: string;
   attributes: Attributes;
   trainedSkills: SkillName[];
-  feats: string[];
-  talents: string[];
-  forcePowers: string[];
+  feats: CharacterFeat[];
+  talents: CharacterTalent[];
+  forcePowers: CharacterForcePower[];
   weapons: Weapon[];
   armor: Armor | null;
-  inventory: Equipment[];
+  inventory: InventoryItem[];
   credits: number;
   currentHp: number;
   currentFp: number;

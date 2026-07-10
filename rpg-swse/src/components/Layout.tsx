@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 
 const navItems = [
   { path: '/dashboard', icon: 'person_search', label: 'Personagens' },
+  { path: '/dice', icon: 'casino', label: 'Dados' },
   { path: '/progression', icon: 'trending_up', label: 'Níveis' },
   { path: '/about', icon: 'auto_stories', label: 'Sobre' },
 ];
@@ -96,13 +97,9 @@ export function Layout() {
           <span className="icon">home</span>
           <span>Home</span>
         </Link>
-        <Link to="/progression" className={`bottom-nav-link ${isActive('/progression') ? 'active' : ''}`}>
-          <span className="icon">trending_up</span>
-          <span>Níveis</span>
-        </Link>
-        <Link to="/about" className={`bottom-nav-link ${isActive('/about') ? 'active' : ''}`}>
-          <span className="icon">group</span>
-          <span>Sobre</span>
+        <Link to="/dice" className={`bottom-nav-link ${isActive('/dice') ? 'active' : ''}`}>
+          <span className="icon">casino</span>
+          <span>Dados</span>
         </Link>
         <div className="bottom-nav-create">
           <button className="bottom-nav-create-btn" onClick={() => navigate('/character/new')}>
@@ -110,6 +107,10 @@ export function Layout() {
           </button>
           <div className="bottom-nav-label">Criar</div>
         </div>
+        <Link to="/progression" className={`bottom-nav-link ${isActive('/progression') ? 'active' : ''}`}>
+          <span className="icon">trending_up</span>
+          <span>Níveis</span>
+        </Link>
         <button className="bottom-nav-link" onClick={logout}>
           <span className="icon">logout</span>
           <span>Sair</span>

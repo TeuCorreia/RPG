@@ -5,6 +5,7 @@ import { useCharacters } from '../hooks/useCharacter';
 import { speciesList } from '../data/species';
 import { classList } from '../data/classes';
 import { getClassSkills, getSkillKeyAbility, skillsData, isClassSkill as checkClassSkill } from '../data/skills';
+import { weaponsCatalog, armorCatalog } from '../data/equipment';
 import { getAbilityModifier, calculateSkillModifier } from '../utils/calculations';
 import { AttributeBlock } from '../components/AttributeBlock';
 
@@ -132,7 +133,12 @@ export function CreateCharacter() {
         weight,
         attributes: applied,
         trainedSkills,
-        feats: [...species.bonusFeats],
+        feats: species.bonusFeats.map((featName, index) => ({
+          id: `feat-species-${index}-${Date.now()}`,
+          name: featName,
+          description: '',
+          source: 'species' as const,
+        })),
         talents: [],
         forcePowers: [],
         weapons: [],
@@ -368,10 +374,51 @@ export function CreateCharacter() {
       case 4: return (
         <div className="step-content">
           <h2>Equipamento Inicial</h2>
-          <p>Você começa com créditos para comprar equipamento básico.</p>
-          <label>Créditos Iniciais
-            <input type="number" value={credits} onChange={e => setCredits(parseInt(e.target.value))} />
-          </label>
+          <p>Escolha o equipamento inicial do seu personagem.</p>
+
+          <div className="equipment-step">
+            <div className="credits-section">
+              <label>Créditos Iniciais
+                <input type="number" value={credits} onChange={e => setCredits(parseInt(e.target.value) || 0)} min={0} />
+              </label>
+            </div>
+
+            <div className="equipment-catalog">
+              <h3>Armas Disponíveis</h3>
+              <div className="equipment-grid">
+                {weaponsCatalog.slice(0, 6).map(weapon => (
+                  <div key={weapon.id} className="equipment-card">
+                    <div className="equipment-info">
+                      <span className="equipment-name">{weapon.name}</span>
+                      <span className="equipment-cost">{weapon.cost} Cr</span>
+                    </div>
+                    <p className="equipment-desc">{weapon.description}</p>
+                    <div className="equipment-stats">
+                      {weapon.damage && <span>Dano: {weapon.damage}</span>}
+                      {weapon.critRange && <span>Ameaça: {weapon.critRange}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <h3>Armaduras Disponíveis</h3>
+              <div className="equipment-grid">
+                {armorCatalog.slice(0, 4).map(armor => (
+                  <div key={armor.id} className="equipment-card">
+                    <div className="equipment-info">
+                      <span className="equipment-name">{armor.name}</span>
+                      <span className="equipment-cost">{armor.cost} Cr</span>
+                    </div>
+                    <p className="equipment-desc">{armor.description}</p>
+                    <div className="equipment-stats">
+                      {armor.reflexBonus !== undefined && <span>Bônus: +{armor.reflexBonus}</span>}
+                      {armor.maxDexBonus !== undefined && <span>Max DEX: {armor.maxDexBonus}</span>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
           <div style={{ marginTop: 20, padding: 16, background: 'var(--bg-secondary)', borderRadius: 10 }}>
             <h3 style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Avatar do Personagem</h3>

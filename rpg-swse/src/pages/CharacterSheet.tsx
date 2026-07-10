@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import type { SkillName, AttributeName, Weapon, Character } from '../types';
+import type { SkillName, AttributeName, Weapon, Character, InventoryItem, CharacterFeat, CharacterTalent, CharacterForcePower } from '../types';
 import { useCharacters } from '../hooks/useCharacter';
 import { useDiceRoller } from '../hooks/useDiceRoller';
 import { AttributeBlock } from '../components/AttributeBlock';
@@ -8,6 +8,10 @@ import { SkillsList } from '../components/SkillsList';
 import { ConditionTracker } from '../components/ConditionTracker';
 import { DiceRoller } from '../components/DiceRoller';
 import { LevelUpModal } from '../components/LevelUpModal';
+import InventoryList from '../components/inventory/InventoryList';
+import FeatEditor from '../components/abilities/FeatEditor';
+import TalentEditor from '../components/abilities/TalentEditor';
+import ForcePowerEditor from '../components/force/ForcePowerEditor';
 import { calculateDefense, calculateMaxHp, calculateSkillModifier, calculateForcePoints, getAbilityModifier, calculateXpForLevel } from '../utils/calculations';
 import { speciesList } from '../data/species';
 
@@ -22,7 +26,6 @@ export function CharacterSheet() {
   const [editMode, setEditMode] = useState(false);
   const [tab, setTab] = useState<Tab>('combate');
   const [newWeapon, setNewWeapon] = useState<Weapon>({ name: '', attackBonus: 0, damage: '', critRange: '20', type: '', weight: 0 });
-  const [newItem, setNewItem] = useState({ name: '', quantity: 1, weight: 0 });
   const [showRoller, setShowRoller] = useState(false);
   const [showLevelUp, setShowLevelUp] = useState(false);
 
@@ -82,16 +85,6 @@ export function CharacterSheet() {
 
   function removeWeapon(index: number) {
     updateChar({ weapons: c.weapons.filter((_, i) => i !== index) });
-  }
-
-  function addItem() {
-    if (!newItem.name) return;
-    updateChar({ inventory: [...c.inventory, { ...newItem, description: '' }] });
-    setNewItem({ name: '', quantity: 1, weight: 0 });
-  }
-
-  function removeItem(index: number) {
-    updateChar({ inventory: c.inventory.filter((_, i) => i !== index) });
   }
 
   const tabs: { key: Tab; label: string; icon: string }[] = [
@@ -448,59 +441,33 @@ export function CharacterSheet() {
                 ));
               })()}
             </div>
-            <div className="feat-group">
-              <h3>Feats</h3>
-              {c.feats.length === 0 ? (
-                <p className="empty-text">Nenhum</p>
-              ) : (
-                c.feats.map((f, i) => <div key={i} className="feat-item">✦ {f}</div>)
-              )}
-            </div>
-            <div className="feat-group">
-              <h3>Poderes da Força</h3>
-              {c.forcePowers.length === 0 ? (
-                <p className="empty-text">Nenhum</p>
-              ) : (
-                c.forcePowers.map((p, i) => <div key={i} className="feat-item">✦ {p}</div>)
-              )}
-            </div>
-            <div className="feat-group">
-              <h3>Talento</h3>
-              {c.talents.length === 0 ? (
-                <p className="empty-text">Nenhum</p>
-              ) : (
-                c.talents.map((t, i) => <div key={i} className="feat-item">✦ {t}</div>)
-              )}
-            </div>
+            <FeatEditor
+              character={c}
+              editMode={editMode}
+              onUpdateFeats={(feats: CharacterFeat[]) => updateChar({ feats })}
+            />
+            <ForcePowerEditor
+              character={c}
+              editMode={editMode}
+              onUpdateForcePowers={(forcePowers: CharacterForcePower[]) => updateChar({ forcePowers })}
+            />
+            <TalentEditor
+              character={c}
+              editMode={editMode}
+              onUpdateTalents={(talents: CharacterTalent[]) => updateChar({ talents })}
+            />
           </div>
         </section>
       )}
 
       {tab === 'inventario' && (
         <section className="sheet-panel">
-          <h3 className="sheet-panel-title">Inventário</h3>
-          {c.inventory.length === 0 ? (
-            <div className="inventory-empty">Mochila vazia</div>
-          ) : (
-            c.inventory.map((item, i) => (
-              <div key={i} className="inventory-item">
-                <span className="item-name">{item.name}</span>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span className="item-qty">x{item.quantity}</span>
-                  {editMode && (
-                    <button className="btn-small btn-danger" onClick={() => removeItem(i)} style={{ padding: '2px 6px', fontSize: 10 }}>×</button>
-                  )}
-                </div>
-              </div>
-            ))
-          )}
-          {editMode && (
-            <div className="inventory-add">
-              <input placeholder="Item" value={newItem.name} onChange={e => setNewItem({ ...newItem, name: e.target.value })} />
-              <input type="number" placeholder="Qtd" className="qty" value={newItem.quantity} onChange={e => setNewItem({ ...newItem, quantity: parseInt(e.target.value) || 1 })} />
-              <button className="btn-primary btn-small" onClick={addItem}>+</button>
-            </div>
-          )}
+          <InventoryList
+            character={c}
+            editMode={editMode}
+            onUpdateInventory={(inventory: InventoryItem[]) => updateChar({ inventory })}
+            onUpdateCredits={(credits: number) => updateChar({ credits })}
+          />
         </section>
       )}
 
