@@ -167,6 +167,12 @@ export interface ClassEntry {
   level: number;
 }
 
+export interface PrestigeClassEntry {
+  classId: string;
+  className: string;
+  level: number;
+}
+
 export interface Character {
   id: string;
   userId: string;
@@ -175,6 +181,7 @@ export interface Character {
   image?: string;
   heroicClass: HeroicClass;
   classes: ClassEntry[];
+  prestigeClass?: PrestigeClassEntry;
   level: number;
   xp: number;
   age: number;

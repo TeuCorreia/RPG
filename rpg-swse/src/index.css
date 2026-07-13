@@ -4824,6 +4824,364 @@ body {
   margin: 0;
 }
 
+/* Prestige Class Editor (Character Sheet) */
+.prestige-active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.prestige-active-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.prestige-active-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.prestige-active-name {
+  font-size: 18px;
+  color: var(--accent);
+  font-weight: 700;
+  margin: 0;
+}
+
+.prestige-active-level {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.prestige-active-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.prestige-active-benefits {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.prestige-active-benefits h4 {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.prestige-active-benefits ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.prestige-benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.prestige-active-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.prestige-stat {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.prestige-stat-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.prestige-stat-value {
+  font-size: 14px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Prestige Selector */
+.prestige-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.prestige-selector-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.prestige-selector-intro h3 {
+  font-size: 16px;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.prestige-selector-intro p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.prestige-grid-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prestige-editor-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--text-muted);
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.prestige-editor-card.eligible {
+  border-left-color: var(--accent);
+}
+
+.prestige-editor-card.expanded {
+  border-color: var(--accent);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.prestige-editor-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.prestige-editor-card-header:hover {
+  background: var(--bg-card-hover);
+}
+
+.prestige-editor-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.prestige-editor-name {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.prestige-editor-entry {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.prestige-editor-card-status {
+  flex-shrink: 0;
+}
+
+.prestige-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prestige-status-badge.eligible {
+  color: var(--success);
+  background: rgba(46, 213, 115, 0.1);
+  border: 1px solid rgba(46, 213, 115, 0.2);
+}
+
+.prestige-status-badge.locked {
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.prestige-editor-card-body {
+  padding: 0 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.prestige-editor-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.prestige-editor-reqs {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.prestige-editor-reqs strong {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.prestige-editor-reqs ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.prestige-editor-reqs li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.prestige-editor-reqs li.met {
+  color: var(--success);
+}
+
+.prestige-editor-reqs li.unmet {
+  color: var(--danger);
+}
+
+.prestige-editor-benefits {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+
+.prestige-editor-benefits strong {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.prestige-editor-benefits ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.prestige-editor-benefits li {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-left: 12px;
+  position: relative;
+}
+
+.prestige-editor-benefits li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.prestige-editor-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.prestige-editor-stats span {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.prestige-select-btn {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Prestige badge in header */
+.sheet-badge-prestige {
+  background: rgba(74, 125, 255, 0.15);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .prestige-active-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .prestige-active-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .prestige-editor-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .prestige-status-badge {
+    align-self: flex-start;
+  }
+}
+
 /* Quick Summary Table */
 .quick-summary {
   display: flex;

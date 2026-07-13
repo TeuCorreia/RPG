@@ -12,10 +12,11 @@ import InventoryList from '../components/inventory/InventoryList';
 import FeatEditor from '../components/abilities/FeatEditor';
 import TalentEditor from '../components/abilities/TalentEditor';
 import ForcePowerEditor from '../components/force/ForcePowerEditor';
+import PrestigeClassEditor from '../components/prestige/PrestigeClassEditor';
 import { calculateDefense, calculateMaxHp, calculateSkillModifier, calculateForcePoints, getAbilityModifier, calculateXpForLevel } from '../utils/calculations';
 import { speciesList } from '../data/species';
 
-type Tab = 'combate' | 'habilidades' | 'rituais' | 'inventario' | 'descricao';
+type Tab = 'combate' | 'habilidades' | 'rituais' | 'inventario' | 'descricao' | 'prestigio';
 
 export function CharacterSheet() {
   const { id } = useParams();
@@ -93,6 +94,7 @@ export function CharacterSheet() {
     { key: 'rituais', label: 'Habilidades', icon: 'auto_stories' },
     { key: 'inventario', label: 'Inventário', icon: 'inventory_2' },
     { key: 'descricao', label: 'Descrição', icon: 'description' },
+    ...(c.level >= 8 ? [{ key: 'prestigio' as Tab, label: 'Prestígio', icon: 'military_tech' }] : []),
   ];
 
   return (
@@ -109,6 +111,9 @@ export function CharacterSheet() {
           {c.classes.map(ce => (
             <span key={ce.name} className="sheet-badge sheet-badge-class">{ce.name} {ce.level}</span>
           ))}
+          {c.prestigeClass && (
+            <span className="sheet-badge sheet-badge-prestige">{c.prestigeClass.className} {c.prestigeClass.level}</span>
+          )}
           <span className="sheet-badge sheet-badge-neutral">Nível {c.level}</span>
           <span className="sheet-badge sheet-badge-neutral">XP: {c.xp}</span>
           {c.credits > 0 && <span className="sheet-badge sheet-badge-credits">{c.credits} Cr</span>}
@@ -516,6 +521,16 @@ export function CharacterSheet() {
             )}
           </section>
         </div>
+      )}
+
+      {tab === 'prestigio' && (
+        <section className="sheet-panel">
+          <PrestigeClassEditor
+            character={c}
+            editMode={editMode}
+            onUpdatePrestige={(prestige) => updateChar({ prestigeClass: prestige })}
+          />
+        </section>
       )}
 
       {/* Level Up Modal */}
