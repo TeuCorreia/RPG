@@ -13,12 +13,25 @@ export default function FeatEditor({ character, editMode, onUpdateFeats }: Props
   const [showCatalog, setShowCatalog] = useState(false);
   const [editingFeat, setEditingFeat] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mainTab, setMainTab] = useState<'catalog' | 'mine'>('catalog');
+  const [expandedCards, setExpandedCards] = useState<Set<string>>(new Set());
   const [newFeatName, setNewFeatName] = useState('');
   const [newFeatDesc, setNewFeatDesc] = useState('');
+
+  const myFeats = character.feats;
 
   const filteredFeats = searchQuery
     ? searchFeats(searchQuery)
     : featsCatalog;
+
+  const toggleCard = (id: string) => {
+    setExpandedCards(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   const handleAddFromCatalog = (featId: string) => {
     const feat = getFeatById(featId);
@@ -39,7 +52,6 @@ export default function FeatEditor({ character, editMode, onUpdateFeats }: Props
     };
 
     onUpdateFeats([...character.feats, newFeat]);
-    setShowCatalog(false);
   };
 
   const handleAddCustom = () => {
@@ -128,69 +140,156 @@ export default function FeatEditor({ character, editMode, onUpdateFeats }: Props
       </div>
 
       {showCatalog && (
-        <div className="catalog-modal">
-          <div className="catalog-content">
+        <div className="catalog-overlay" onClick={() => setShowCatalog(false)}>
+          <div className="catalog-modal" onClick={e => e.stopPropagation()}>
+
             <div className="catalog-header">
-              <h3>Adicionar Feat</h3>
-              <button onClick={() => setShowCatalog(false)}>×</button>
+              <h3>Adicionar Feats</h3>
+              <button className="catalog-close" onClick={() => setShowCatalog(false)}>×</button>
             </div>
 
-            <input
-              type="text"
-              placeholder="Buscar feat..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="catalog-search"
-            />
-
-            <div className="catalog-list">
-              {filteredFeats.map(feat => {
-                const alreadyHas = character.feats.some(f => f.name === feat.name);
-                const validation = validateFeatPrerequisites(feat.id, character);
-
-                return (
-                  <div
-                    key={feat.id}
-                    className={`catalog-item ${alreadyHas ? 'owned' : ''} ${!validation.valid ? 'locked' : ''}`}
-                  >
-                    <div className="catalog-item-info">
-                      <strong>{feat.name}</strong>
-                      <p>{feat.description}</p>
-                      {feat.prerequisites && (
-                        <span className="prereqs">
-                          Requisitos: {feat.prerequisites.join(', ')}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      onClick={() => handleAddFromCatalog(feat.id)}
-                      disabled={alreadyHas || !validation.valid}
-                    >
-                      {alreadyHas ? 'Possui' : validation.valid ? 'Adicionar' : 'Bloqueado'}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="custom-add">
-              <h4>Ou adicionar customizado:</h4>
-              <input
-                type="text"
-                placeholder="Nome do feat"
-                value={newFeatName}
-                onChange={e => setNewFeatName(e.target.value)}
-              />
-              <textarea
-                placeholder="Descrição (opcional)"
-                value={newFeatDesc}
-                onChange={e => setNewFeatDesc(e.target.value)}
-                rows={2}
-              />
-              <button onClick={handleAddCustom} disabled={!newFeatName.trim()}>
-                Adicionar Customizado
+            <div className="catalog-main-tabs">
+              <button
+                className={`catalog-main-tab ${mainTab === 'catalog' ? 'active' : ''}`}
+                onClick={() => setMainTab('catalog')}
+              >
+                Habilidades
+              </button>
+              <button
+                className={`catalog-main-tab ${mainTab === 'mine' ? 'active' : ''}`}
+                onClick={() => setMainTab('mine')}
+              >
+                Minhas Habilidades ({myFeats.length})
               </button>
             </div>
+
+            {mainTab === 'catalog' ? (
+              <>
+                <div className="catalog-search-wrapper">
+                  <span className="catalog-search-icon">🔍</span>
+                  <input
+                    type="text"
+                    placeholder="Buscar feat..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="catalog-search"
+                  />
+                </div>
+
+                <div className="catalog-skill-list">
+                  {filteredFeats.length === 0 && (
+                    <p className="empty-text" style={{ padding: 20 }}>Nenhum feat encontrado</p>
+                  )}
+                  {filteredFeats.map(feat => {
+                    const alreadyHas = character.feats.some(f => f.name === feat.name);
+                    const validation = validateFeatPrerequisites(feat.id, character);
+                    const isExpanded = expandedCards.has(feat.id);
+
+                    return (
+                      <div
+                        key={feat.id}
+                        className={`skill-card ${alreadyHas ? 'owned' : ''} ${!validation.valid ? 'locked' : ''} ${isExpanded ? 'expanded' : ''}`}
+                      >
+                        <div className="skill-card-header" onClick={() => toggleCard(feat.id)}>
+                          <span className="skill-card-chevron">{isExpanded ? '▾' : '▸'}</span>
+                          <span className="skill-card-name">{feat.name}</span>
+                          <button
+                            className="skill-card-add"
+                            onClick={e => { e.stopPropagation(); handleAddFromCatalog(feat.id); }}
+                            disabled={alreadyHas || !validation.valid}
+                          >
+                            {alreadyHas ? '✓' : '+'}
+                          </button>
+                        </div>
+                        {isExpanded && (
+                          <div className="skill-card-body">
+                            <p className="skill-card-desc">{feat.description}</p>
+                            {feat.prerequisites && feat.prerequisites.length > 0 && (
+                              <span className="skill-card-prereqs">
+                                Requisitos: {feat.prerequisites.join(', ')}
+                              </span>
+                            )}
+                            {!validation.valid && (
+                              <span className="skill-card-blocked">
+                                Pré-requisitos não atendidos: {validation.missing.join(', ')}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="catalog-search-wrapper">
+                  <span className="catalog-search-icon">🔍</span>
+                  <input
+                    type="text"
+                    placeholder="Buscar nos seus feats..."
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                    className="catalog-search"
+                  />
+                </div>
+                <div className="catalog-skill-list">
+                  {myFeats.filter(f => !searchQuery || f.name.toLowerCase().includes(searchQuery.toLowerCase())).length === 0 && (
+                    <p className="empty-text" style={{ padding: 20 }}>
+                      {myFeats.length === 0 ? 'Nenhum feat adicionado' : 'Nenhum resultado'}
+                    </p>
+                  )}
+                  {myFeats
+                    .filter(f => !searchQuery || f.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .map(feat => {
+                      const isExpanded = expandedCards.has(feat.id);
+                      return (
+                        <div key={feat.id} className={`skill-card owned ${isExpanded ? 'expanded' : ''}`}>
+                          <div className="skill-card-header" onClick={() => toggleCard(feat.id)}>
+                            <span className="skill-card-chevron">{isExpanded ? '▾' : '▸'}</span>
+                            <span className="skill-card-name">{feat.name}</span>
+                            {feat.source === 'custom' && <span className="class-badge">Custom</span>}
+                            {editMode && (
+                              <button
+                                className="skill-card-remove"
+                                onClick={e => { e.stopPropagation(); handleRemoveFeat(feat.id); }}
+                              >
+                                ×
+                              </button>
+                            )}
+                          </div>
+                          {isExpanded && feat.description && (
+                            <div className="skill-card-body">
+                              <p className="skill-card-desc">{feat.description}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {editMode && (
+                  <div className="custom-add">
+                    <h4>Adicionar Customizado</h4>
+                    <input
+                      type="text"
+                      placeholder="Nome do feat"
+                      value={newFeatName}
+                      onChange={e => setNewFeatName(e.target.value)}
+                    />
+                    <textarea
+                      placeholder="Descrição (opcional)"
+                      value={newFeatDesc}
+                      onChange={e => setNewFeatDesc(e.target.value)}
+                      rows={2}
+                    />
+                    <button onClick={handleAddCustom} disabled={!newFeatName.trim()}>
+                      Adicionar Customizado
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       )}
