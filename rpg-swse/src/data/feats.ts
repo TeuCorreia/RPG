@@ -92,7 +92,7 @@ export const featsCatalog: FeatCatalogItem[] = [
     id: 'feat-weapon-focus',
     name: 'Foco em Arma',
     description: '+1 nos ataques com uma arma específica.',
-    prerequisites: ['BAB +1', 'Proficiência com a arma'],
+    prerequisites: ['BAB +1'],
     type: 'combat',
   },
   {
@@ -155,6 +155,12 @@ export const featsCatalog: FeatCatalogItem[] = [
     name: 'Ambidestro',
     description: 'Usa a mão não-dominante sem penalidade.',
     type: 'combat',
+  },
+  {
+    id: 'feat-natural-leader',
+    name: 'Líder Nato',
+    description: 'Concede +1 em jogadas de ataque a aliados adjacentes.',
+    type: 'general',
   },
   {
     id: 'feat-armor-proficiency-light',

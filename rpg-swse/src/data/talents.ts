@@ -140,7 +140,7 @@ export const nobreTalents: TalentCatalogItem[] = [
   },
   {
     id: 'talent-lead',
-    name: 'Liderar',
+    name: 'Coordenar',
     description: 'Conceder +1 atestes de aliados adjacêntes.',
     tree: 'Influência',
     class: 'Nobre',

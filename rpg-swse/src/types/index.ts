@@ -205,7 +205,7 @@ export interface Character {
   reflexOverride?: number;
   fortitudeOverride?: number;
   willOverride?: number;
-  currentCondition: number;
+  destinationPoints: number;
   appearance: string;
   background: string;
   notes: string;

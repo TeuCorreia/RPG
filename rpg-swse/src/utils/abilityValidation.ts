@@ -206,7 +206,7 @@ export function calculateEncumbrance(character: Character): {
 } {
   // Calcular capacidade baseada na STR
   const strMod = Math.floor((character.attributes.STR - 10) / 2);
-  const baseCapacity = 100 + (strMod * 10);
+  const baseCapacity = 30 + (strMod * 5);
 
   // Calcular peso total do inventário
   const totalWeight = character.inventory.reduce(

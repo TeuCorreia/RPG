@@ -5,11 +5,10 @@ import { useCharacters } from '../hooks/useCharacter';
 import { speciesList } from '../data/species';
 import { classList } from '../data/classes';
 import { getClassSkills, getSkillKeyAbility, skillsData, isClassSkill as checkClassSkill } from '../data/skills';
-import { weaponsCatalog, armorCatalog } from '../data/equipment';
 import { getAbilityModifier, calculateSkillModifier } from '../utils/calculations';
 import { AttributeBlock } from '../components/AttributeBlock';
 
-const steps = ['Geral', 'Atributos', 'Classe', 'Perícias', 'Equipamento', 'Revisão'];
+const steps = ['Geral', 'Atributos', 'Classe', 'Perícias', 'Aparência'];
 
 const allSkills: SkillName[] = [
   'Acrobacia', 'Escalar', 'Enganação', 'Resistência',
@@ -147,7 +146,7 @@ export function CreateCharacter() {
         credits,
         currentHp: selectedClass.hpPerLevel + getAbilityModifier(applied.CON),
         currentFp: 5 + Math.floor(1 / 2),
-        currentCondition: 0,
+        destinationPoints: 1,
         appearance,
         background,
         notes: '',
@@ -325,7 +324,7 @@ export function CreateCharacter() {
                         trainedSkills,
                         level: 1,
                         heroicClass,
-                        currentHp: 0, currentCondition: 0, xp: 0,
+                        currentHp: 0, destinationPoints: 1, xp: 0,
                         id: '', userId: '', name: '', species: '',
                         age: 0, gender: '', height: '', weight: '',
                         feats: [], talents: [], forcePowers: [],
@@ -374,51 +373,12 @@ export function CreateCharacter() {
 
       case 4: return (
         <div className="step-content">
-          <h2>Equipamento Inicial</h2>
-          <p>Escolha o equipamento inicial do seu personagem.</p>
+          <h2>Aparência e Descrição</h2>
 
-          <div className="equipment-step">
-            <div className="credits-section">
-              <label>Créditos Iniciais
-                <input type="number" value={credits} onChange={e => setCredits(parseInt(e.target.value) || 0)} min={0} />
-              </label>
-            </div>
-
-            <div className="equipment-catalog">
-              <h3>Armas Disponíveis</h3>
-              <div className="equipment-grid">
-                {weaponsCatalog.slice(0, 6).map(weapon => (
-                  <div key={weapon.id} className="equipment-card">
-                    <div className="equipment-info">
-                      <span className="equipment-name">{weapon.name}</span>
-                      <span className="equipment-cost">{weapon.cost} Cr</span>
-                    </div>
-                    <p className="equipment-desc">{weapon.description}</p>
-                    <div className="equipment-stats">
-                      {weapon.damage && <span>Dano: {weapon.damage}</span>}
-                      {weapon.critRange && <span>Ameaça: {weapon.critRange}</span>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <h3>Armaduras Disponíveis</h3>
-              <div className="equipment-grid">
-                {armorCatalog.slice(0, 4).map(armor => (
-                  <div key={armor.id} className="equipment-card">
-                    <div className="equipment-info">
-                      <span className="equipment-name">{armor.name}</span>
-                      <span className="equipment-cost">{armor.cost} Cr</span>
-                    </div>
-                    <p className="equipment-desc">{armor.description}</p>
-                    <div className="equipment-stats">
-                      {armor.reflexBonus !== undefined && <span>Bônus: +{armor.reflexBonus}</span>}
-                      {armor.maxDexBonus !== undefined && <span>Max DEX: {armor.maxDexBonus}</span>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <div className="credits-section">
+            <label>Créditos Iniciais
+              <input type="number" value={credits} onChange={e => setCredits(parseInt(e.target.value) || 0)} min={0} />
+            </label>
           </div>
 
           <div style={{ marginTop: 20, padding: 16, background: 'var(--bg-secondary)', borderRadius: 10 }}>
@@ -483,33 +443,6 @@ export function CreateCharacter() {
             <label>História / Background
               <textarea value={background} onChange={e => setBackground(e.target.value)} rows={5} placeholder="Conte a história do seu personagem..." />
             </label>
-          </div>
-        </div>
-      );
-
-      case 5: return (
-        <div className="step-content review">
-          <h2>Revisão da Ficha</h2>
-          {error && <p className="error-msg">{error}</p>}
-          <div className="review-grid">
-            <div><strong>Nome:</strong> {name}</div>
-            <div><strong>Espécie:</strong> {species.name}</div>
-            <div><strong>Classe:</strong> {heroicClass}</div>
-            <div><strong>Nível:</strong> 1</div>
-            <div><strong>HP:</strong> {selectedClass.hpPerLevel + getAbilityModifier(getAppliedAttributes().CON)}</div>
-            <div><strong>Créditos:</strong> {credits}</div>
-          </div>
-          <div className="review-attributes">
-            <h3>Atributos</h3>
-            <div className="attributes-grid small">
-              {(Object.entries(getAppliedAttributes()) as [AttributeName, number][]).map(([attr, score]) => (
-                <div key={attr}>{attr}: {score} ({getAbilityModifier(score) >= 0 ? '+' : ''}{getAbilityModifier(score)})</div>
-              ))}
-            </div>
-          </div>
-          <div className="review-skills">
-            <h3>Perícias Treinadas</h3>
-            <p>{trainedSkills.length > 0 ? trainedSkills.join(', ') : 'Nenhuma'}</p>
           </div>
         </div>
       );

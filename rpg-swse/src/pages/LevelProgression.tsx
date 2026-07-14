@@ -54,33 +54,33 @@ const talentTreesByClass: ClassTrees[] = [
       {
         name: 'Guardião Jedi',
         talents: [
-          { name: 'Bloqueio', desc: 'Usa o sabre de luz para bloquear ataques corpo a corpo. Requer um sabre de luz em mãos.' },
-          { name: 'Desvio', desc: 'Desvia tiros de blaster com o sabre de luz. Requer o talento Bloqueio.' },
-          { name: 'Especialização em Armas', desc: '+1 em jogadas de dano com sabres de luz.' },
+          { name: 'Bloqueio', desc: 'Use sua arma para bloquear ataques corpo-a-corpo.' },
+          { name: 'Desvio', desc: 'Desvie tiros de blaster com sua arma.' },
+          { name: 'Especialização em Arma', desc: '+1 dano com sabres de luz.' },
         ],
       },
       {
         name: 'Cônsul Jedi',
         talents: [
-          { name: 'Persuasão da Força', desc: 'Usa a Força para influenciar mentes fracas, como se estivesse usando Persuasão.' },
-          { name: 'Percepção da Força', desc: 'Usa a Força para perceber o ambiente ao redor, mesmo com sentidos normais bloqueados.' },
-          { name: 'Truque Mental', desc: 'Convence uma criatura de que algo é verdadeiro por 1 rodada se falhar em Vontade.' },
+          { name: 'Insight', desc: '+2 Percepção e Intuição.' },
+          { name: 'Aura da Força', desc: 'Sentir presenças e emoções em 10m.' },
+          { name: 'Maestria na Força', desc: 'Bônus de +5 em testes de Usar a Força.' },
         ],
       },
       {
         name: 'Sentinela Jedi',
         talents: [
-          { name: 'Furtividade da Força', desc: 'Esconde sua presença na Força, tornando-se invisível para detecção pela Força.' },
-          { name: 'Rastreio da Força', desc: 'Rastreia criaturas ou objetos através da Força.' },
-          { name: 'Sentido Sombrio', desc: 'Sente a presença do Lado Sombrio e criaturas corrompidas pela Força.' },
+          { name: 'Espionagem Jedi', desc: '+2 Furtividade e Enganação.' },
+          { name: 'Sentir Engano', desc: 'Detectar mentiras automaticamente.' },
+          { name: 'Truque Mental', desc: 'Usar a Força para influenciar mentes.' },
         ],
       },
       {
         name: 'Adepto da Força',
         talents: [
-          { name: 'Redemoinho da Força', desc: 'Cria um redemoinho de energia da Força que causa dano em área.' },
-          { name: 'Relâmpago da Força', desc: 'Dispara descargas elétricas da Força contra um alvo.' },
-          { name: 'Meditação de Batalha', desc: 'Concede bônus em ataques e defesas para aliados em combate.' },
+          { name: 'Vínculo da Força', desc: 'Criar conexão telepática com aliados.' },
+          { name: 'Cura pela Força', desc: 'Curar 1d6+mod de CHA de PV.' },
+          { name: 'Ressurreição', desc: 'Reviver um aliado falecido.' },
         ],
       },
     ],
@@ -91,33 +91,33 @@ const talentTreesByClass: ClassTrees[] = [
       {
         name: 'Armadura',
         talents: [
-          { name: 'Defesa com Armadura', desc: 'Reduz a penalidade de armadura na Defesa de Reflexo. Permite usar o bônus de armadura em Reflexo.' },
-          { name: 'Defesa com Armadura Aprimorada', desc: 'Melhora ainda mais o uso de armaduras, aumentando o bônus de Defesa.' },
-          { name: 'Juggernaut', desc: 'Ignora redução de deslocamento por armadura e recebe bônus em manobras de combate.' },
+          { name: 'Proficiência em Armadura', desc: 'Ignorar penalidades de armadura.' },
+          { name: 'Maestria em Armadura', desc: '+2 AC em armaduras pesadas.' },
+          { name: 'Juggernaut', desc: 'Não pode ser derrubado. +10 PV.' },
         ],
       },
       {
         name: 'Comando',
         talents: [
-          { name: 'Análise de Batalha', desc: 'Estuda um oponente como ação de movimento para ganhar +2 em ataques contra ele.' },
-          { name: 'Coordenar', desc: 'Coordena aliados para conceder bônus em ataques ou defesas.' },
-          { name: 'Táticas de Campo', desc: 'Concede +1 de bônus em jogadas de ataque para aliados próximos.' },
+          { name: 'Inspirar Resiliência', desc: '+2 resistências dos aliados.' },
+          { name: 'Presença Aterrorizante', desc: 'Inimigos fazem -2 nos ataques.' },
+          { name: 'Temível', desc: 'Aliados ganham +1d6 PV temporários.' },
         ],
       },
       {
         name: 'Arma Pesada',
         talents: [
-          { name: 'Apoiar', desc: 'Reduz penalidade por disparar armas pesadas sem estar apoiado.' },
-          { name: 'Golpe Possante', desc: '+2 de dano corpo a corpo ao custo de -5 na jogada de ataque.' },
-          { name: 'Ataque Penetrante', desc: 'Ignora redução de dano e alguns bônus de defesa do alvo.' },
+          { name: 'Proficiência Arma Pesada', desc: 'Usar armas pesadas sem penalidade.' },
+          { name: 'Maestria Arma Pesada', desc: '+2 dano com armas pesadas.' },
+          { name: 'Golpe Devastador', desc: '+4d6 dano uma vez por cena.' },
         ],
       },
       {
         name: 'Especialista em Armas',
         talents: [
-          { name: 'Foco em Arma', desc: '+1 em jogadas de ataque com uma categoria de arma (sabre, blaster, etc.).' },
-          { name: 'Especialização em Arma', desc: '+2 em dano com a categoria de arma escolhida em Foco em Arma.' },
-          { name: 'Especialização Avançada', desc: '+2 adicional em dano (total +4) com a categoria de arma escolhida.' },
+          { name: 'Proficiência em Arma', desc: 'Treinamento com todas as armas.' },
+          { name: 'Maestria em Arma', desc: '+1 ataque e +1d6 dano.' },
+          { name: 'Expert em Arma', desc: 'Crítico automático 1 vez por cena.' },
         ],
       },
     ],
@@ -128,33 +128,33 @@ const talentTreesByClass: ClassTrees[] = [
       {
         name: 'Sorte',
         talents: [
-          { name: 'Sorte do Tolo', desc: 'Uma vez por encontro, rola 1d6 e adiciona o resultado em um teste de perícia.' },
-          { name: 'Tiro de Sorte', desc: 'Gasta um Ponto de Força para transformar um ataque que errou em um acerto.' },
-          { name: 'Sorte Absurda', desc: 'Uma vez por sessão, pode rolar novamente qualquer teste recém realizado.' },
+          { name: 'Junk Rider', desc: '+2 Mecânica para improvisar armadilhas.' },
+          { name: 'Mente Escorregadia', desc: 'Imunidade a controle mental.' },
+          { name: 'Alterar Dados', desc: 'Rolar novamente um dado uma vez por cena.' },
         ],
       },
       {
         name: 'Engenhoca',
         talents: [
-          { name: 'Criar Própria Sorte', desc: 'Pode usar Enganação no lugar de Pilotagem ou Mecânica uma vez por encontro.' },
-          { name: 'Reconstruir', desc: 'Recupera um item quebrado ou danificado com sucesso em teste de Mecânica.' },
-          { name: 'Peças Sobressalentes', desc: 'Sempre encontra peças para reparar equipamentos, mesmo em situações adversas.' },
+          { name: 'Expert em Gadgets', desc: '+5 Mecânica e Usar Computador.' },
+          { name: 'Mestre Instalador', desc: 'Instalar 2 upgrades em armas/armaduras.' },
+          { name: 'Construção Superior', desc: 'Armas/armaduras com +1 bônus.' },
         ],
       },
       {
         name: 'Sorte de Vigarista',
         talents: [
-          { name: 'Antes Sorte Que Tino', desc: 'Usa sorte em vez de habilidade para testes de perícia uma vez por encontro.' },
-          { name: 'Gambiarra', desc: 'Faz equipamento funcionar temporariamente apesar de danos severos.' },
-          { name: 'Talento Natural', desc: 'Escolha uma perícia; você a considera como treinada mesmo sem sê-lo.' },
+          { name: 'Mão Rápida', desc: '+5 Furtividade para pegar itens.' },
+          { name: 'Tiro Truque', desc: 'Atirar em objeto específico (-5).' },
+          { name: 'Golpe Mirado', desc: 'Acertar local específico (+2d6 dano).' },
         ],
       },
       {
         name: 'Escaramuçador',
         talents: [
-          { name: 'Golpe Traiçoeiro', desc: '+1 de dano contra alvos desprevenidos ou que não podem agir.' },
-          { name: 'Ataque Furtivo', desc: '+2d6 de dano extra contra oponentes que perderam a Destreza na Defesa.' },
-          { name: 'Escaramuça', desc: 'Move e ataca sem sofrer ataques de oportunidade.' },
+          { name: 'Atrair Fogo', desc: '-2 AC para +2 ataque de aliados.' },
+          { name: 'Tecnologia Nociva', desc: '+1d6 dano com armadilhas.' },
+          { name: 'Mestre Sabotador', desc: 'Dobrar dano de explosivos.' },
         ],
       },
     ],
@@ -165,33 +165,33 @@ const talentTreesByClass: ClassTrees[] = [
       {
         name: 'Consciência',
         talents: [
-          { name: 'Sentidos Aguçados', desc: '+5 em Percepção. Você percebe coisas que outros não notam.' },
-          { name: 'Evasão', desc: 'Se passar em um teste de Reflexo contra ataques de área, não sofre dano.' },
-          { name: 'Evasão Aprimorada', desc: 'Mesmo se falhar em Reflexo contra ataques de área, sofre apenas metade do dano.' },
+          { name: 'Sentidos Aguçados', desc: '+2 Percepção. Detectar emboscadas.' },
+          { name: 'Sentidos Afiados', desc: 'Não pode ser surpreendido.' },
+          { name: 'Sexto Sentido', desc: '+2 Iniciativa e resistências.' },
         ],
       },
       {
-        name: 'Brigão',
+        name: 'Brigueiro',
         talents: [
-          { name: 'Valentão', desc: '+2 em testes de agarrão e golpes desarmados.' },
-          { name: 'Força Selvagem', desc: 'Uma vez por encontro, causa +1d6 de dano em um ataque corpo a corpo.' },
-          { name: 'Repulsão', desc: 'Empurra um oponente para trás em 1 quadrado com um ataque corpo a corpo bem-sucedido.' },
+          { name: 'Briga', desc: '+1d6 dano desarmado.' },
+          { name: 'Arte Marcial', desc: 'Golpe crítico com desarmado (19-20).' },
+          { name: 'Arte Marcial Selvagem', desc: '+2d6 dano desarmado.' },
         ],
       },
       {
         name: 'Camuflagem',
         talents: [
-          { name: 'Camuflagem', desc: 'Pode se camuflar em ambientes naturais, recebendo +5 em Furtividade.' },
-          { name: 'Esconder-se à Vista', desc: 'Pode usar Furtividade mesmo quando observado diretamente, se houver cobertura.' },
-          { name: 'Furtividade Aprimorada', desc: 'Pode se mover com velocidade normal sem penalidade em Furtividade.' },
+          { name: 'Esconder à Vista', desc: 'Pode se esconder em áreas abertas.' },
+          { name: 'Desviar Atenção', desc: '+5 Enganação para distrair.' },
+          { name: 'Desvanecer', desc: 'Tornar-se invisível 1 rodada.' },
         ],
       },
       {
         name: 'Passos Longos',
         talents: [
-          { name: 'Passada Larga', desc: 'Seu deslocamento base aumenta em +2.' },
-          { name: 'Retirada Rápida', desc: 'Ao usar a ação de retirada, move o dobro do deslocamento.' },
-          { name: 'Pés Firmes', desc: 'Ignora terreno difícil e não sofre penalidades por movimento.' },
+          { name: 'Resistência', desc: '+5 Resistência. Ignorar difficult terrain.' },
+          { name: 'Instinto Selvagem', desc: '+2 Sobrevivência e Furtividade.' },
+          { name: 'Passo Montanhês', desc: 'Escalar sem corda. +10m deslocamento.' },
         ],
       },
     ],
@@ -202,33 +202,33 @@ const talentTreesByClass: ClassTrees[] = [
       {
         name: 'Influência',
         talents: [
-          { name: 'Líder Nato', desc: 'Aliados a até 6 quadrados recebem +1 em jogadas de ataque.' },
-          { name: 'Inspirar Confiança', desc: 'Aliados recebem +2 em testes de Vontade contra medo e influência.' },
-          { name: 'Fortificar Aliado', desc: 'Um aliado recebe +2 em uma jogada de ataque, perícia ou defesa por 1 rodada.' },
+          { name: 'Voz Comandante', desc: '+2 Persuasão e Intimidação.' },
+          { name: 'Coordenar', desc: 'Conceder +1 atestes de aliados adjacêntes.' },
+          { name: 'Motivar', desc: 'Aliados recuperam 1d6 PV.' },
         ],
       },
       {
         name: 'Liderança',
         talents: [
-          { name: 'Comandar Aliado', desc: 'Um aliado pode realizar uma ação adicional imediatamente.' },
-          { name: 'Reunir', desc: 'Remove condição de medo ou abalado de aliados próximos.' },
-          { name: 'Confiança', desc: 'Aliados próximos recebem +2 em testes de Percepção e Iniciativa.' },
+          { name: 'Inspirar Confiança', desc: '+2 nos testes de resistência dos aliados.' },
+          { name: 'Reunir Tropas', desc: 'Aliados recuperam PV e removem condições.' },
+          { name: 'Inspirar Grandeza', desc: '+4 atestes de aliados contra medo.' },
         ],
       },
       {
         name: 'Linhagem',
         talents: [
-          { name: 'Herança Nobre', desc: 'Começa com o dobro de créditos e recebe +2 em Persuasão com nobres.' },
-          { name: 'Riqueza', desc: 'Recebe uma renda semanal de créditos e pode adquirir itens raros.' },
-          { name: 'Conexões', desc: 'Pode usar contatos para obter informações, favores ou itens.' },
+          { name: 'Riqueza', desc: 'Dobrar renda mensal. +500 Cr iniciais.' },
+          { name: 'Conexões', desc: 'Contatos em 3 cidades. +5 Obter Informação.' },
+          { name: 'Negação', desc: 'Imunidade a investigações. +10 Enganação.' },
         ],
       },
       {
         name: 'Militar',
         talents: [
-          { name: 'Táticas de Implantação', desc: 'Concede +4 em Iniciativa para aliados no início do combate.' },
-          { name: 'Estratégia de Campo', desc: 'Todos os aliados recebem +1 em Defesa contra um tipo de oponente.' },
-          { name: 'Reforços', desc: 'Uma vez por sessão, aliados adicionais chegam para ajudar no combate.' },
+          { name: 'Expertise Tática', desc: '+2 Ataque e +2 AC quando em posição defensiva.' },
+          { name: 'Meditação de Batalha', desc: 'Conceder +1 a ataque de aliados em 10m.' },
+          { name: 'Decisão de Força', desc: 'Ignorar um erro crítico uma vez por cena.' },
         ],
       },
     ],
@@ -239,9 +239,33 @@ const talentTreesByClass: ClassTrees[] = [
       {
         name: 'Sobrevivente',
         talents: [
-          { name: 'Durão', desc: '+5 pontos de vida. Você é mais resistente que a maioria.' },
-          { name: 'Recuperação Rápida', desc: 'Recupera o dobro de pontos de vida com descanso.' },
-          { name: 'Instinto de Sobrevivência', desc: 'Uma vez por dia, pode rolar novamente um teste de resistência fracassado.' },
+          { name: 'Duro como unha', desc: '+3 PV. Ignorar 1 condição.' },
+          { name: 'Aguentar Firme', desc: 'Recuperar 1d6 PV uma vez por cena.' },
+          { name: 'Último Recurso', desc: 'Continuar lutando com 0 PV (1 rodada).' },
+        ],
+      },
+      {
+        name: 'Improvisar',
+        talents: [
+          { name: 'Catador', desc: '+5 Sobrevivência para encontrar suprimentos.' },
+          { name: 'Conserto Rápido', desc: 'Reparar 1d6 PV de equipamento.' },
+          { name: 'Armas Improvisadas', desc: '+2 dano com armas improvisadas.' },
+        ],
+      },
+      {
+        name: 'Comunicação',
+        talents: [
+          { name: 'Esperto de Rua', desc: '+3 Obter Informação e Persuasão.' },
+          { name: 'Conectado', desc: 'Contatos em 5 cidades. +5 Enganação.' },
+          { name: 'Influente', desc: 'Pedir favores. +5 Persuasão.' },
+        ],
+      },
+      {
+        name: 'Adaptável',
+        talents: [
+          { name: 'Mão de Todos', desc: 'Usar qualquer perícia sem treinamento.' },
+          { name: 'Muro de Tijolos', desc: '+5 em um teste resistido.' },
+          { name: 'Força de Vontade', desc: 'Imunidade a efeitos de medo.' },
         ],
       },
     ],

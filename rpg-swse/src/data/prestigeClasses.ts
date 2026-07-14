@@ -20,6 +20,8 @@ export interface PrestigeClassData {
   defenseBonuses: { reflex: number; fortitude: number; will: number };
   talentTrees: string[];
   icon: string;
+  recruitMessage: string;
+  recruitImage?: string;
 }
 
 export const prestigeClasses: PrestigeClassData[] = [
@@ -44,6 +46,8 @@ export const prestigeClasses: PrestigeClassData[] = [
     defenseBonuses: { reflex: 1, fortitude: 1, will: 1 },
     talentTrees: ['Guardião Jedi', 'Sentinela Jedi'],
     icon: 'local_fire_department',
+    recruitMessage: 'A Força o chama. Um caminho de honra e sacrifício se abre diante de você. Está preparado para aceitar o juramento e proteger a galáxia com sabre em mãos?',
+    recruitImage: '../src/assets/prestige/cavaleirojedi.png',
   },
   {
     id: 'mestre-jedi',
@@ -53,7 +57,7 @@ export const prestigeClasses: PrestigeClassData[] = [
     requirements: {
       bab: 8,
       feats: ['Sensibilidade à Força', 'Treinamento na Força'],
-      talents: ['Bloqueio', 'Desvio', 'Percepção da Força'],
+      talents: ['Bloqueio', 'Desvio', 'Maestria na Força'],
     },
     description: 'Mestria absoluta nos caminhos Jedi. O Mestre Jedi é um guia espiritual e combatente lendário, cujo domínio da Força transcende os limites mortais.',
     benefits: [
@@ -66,6 +70,8 @@ export const prestigeClasses: PrestigeClassData[] = [
     defenseBonuses: { reflex: 0, fortitude: 0, will: 2 },
     talentTrees: ['Adepto da Força', 'Cônsul Jedi'],
     icon: 'auto_stories',
+    recruitMessage: 'A sabedoria ancestral flui em suas veias. O Conselho reconhece seu domínio — a Força não é mais uma ferramenta, é parte de você. Ascenda, Mestre.',
+    recruitImage: '../src/assets/prestige/mestrejedi.png',
   },
   {
     id: 'aprendiz-sith',
@@ -89,6 +95,8 @@ export const prestigeClasses: PrestigeClassData[] = [
     defenseBonuses: { reflex: 1, fortitude: 1, will: 1 },
     talentTrees: ['Guardião Jedi', 'Adepto da Força'],
     icon: 'whatshot',
+    recruitMessage: 'O Lado Sombrio sussurra seu nome. Raiva, ódio, poder — todos fluem para quem ousa abraçar a escuridão. Você aceita o pacto?',
+    recruitImage: '../src/assets/prestige/sith3.png',
   },
   {
     id: 'tropa-elite',
@@ -97,7 +105,7 @@ export const prestigeClasses: PrestigeClassData[] = [
     maxLevel: 10,
     requirements: {
       bab: 7,
-      feats: ['Foco em Arma (qualquer)', 'Especialização em Arma'],
+      feats: ['Foco em Arma', 'Especialização em Arma'],
     },
     description: 'Força militar de elite com treinamento de combate superior. Membros de Tropa de Elite são os soldados mais mortais da galáxia, versáteis e implacáveis em qualquer campo de batalha.',
     benefits: [
@@ -110,6 +118,8 @@ export const prestigeClasses: PrestigeClassData[] = [
     defenseBonuses: { reflex: 1, fortitude: 1, will: 0 },
     talentTrees: ['Arma Pesada', 'Especialista em Armas'],
     icon: 'military_tech',
+    recruitMessage: 'Você sobreviveu aos campos mais brutais de batalha da galáxia. Agora é hora de se tornar algo mais — uma arma viva, imbatível e temida por todos.',
+    recruitImage: '../src/assets/prestige/tropadeelite.png',
   },
   {
     id: 'oficial',
@@ -132,6 +142,8 @@ export const prestigeClasses: PrestigeClassData[] = [
     defenseBonuses: { reflex: 0, fortitude: 0, will: 2 },
     talentTrees: ['Liderança', 'Militar'],
     icon: 'shield',
+    recruitMessage: 'Seus talentos de liderança transcendem o campo de batalha. As tropas olham para você e encontram coragem. Comandante, suas ordens?',
+    recruitImage: '../src/assets/prestige/oficial.png',
   },
   {
     id: 'senhor-crime',
@@ -155,6 +167,8 @@ export const prestigeClasses: PrestigeClassData[] = [
     defenseBonuses: { reflex: 2, fortitude: 0, will: 0 },
     talentTrees: ['Escaramuçador', 'Sorte'],
     icon: 'payments',
+    recruitMessage: 'A galáxia tem leis escritas por fracos. Você escreverá as suas — com sangue, astúcia e poder. O submundo aguarda seu nome.',
+    recruitImage: 'https://images.unsplash.com/photo-1535016120720-40c646be5580?w=600&q=80',
   },
 ];
 

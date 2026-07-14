@@ -5,7 +5,7 @@ import { useCharacters } from '../hooks/useCharacter';
 import { useDiceRoller } from '../hooks/useDiceRoller';
 import { AttributeBlock } from '../components/AttributeBlock';
 import { SkillsList } from '../components/SkillsList';
-import { ConditionTracker } from '../components/ConditionTracker';
+
 import { DiceRoller } from '../components/DiceRoller';
 import { LevelUpModal } from '../components/LevelUpModal';
 import InventoryList from '../components/inventory/InventoryList';
@@ -58,7 +58,7 @@ export function CharacterSheet() {
   ];
   const overrideMap: Record<string, string> = { reflex: 'reflexOverride', fortitude: 'fortitudeOverride', will: 'willOverride' };
   const hpPct = Math.min(100, Math.round((c.currentHp / maxHp) * 100));
-  const conditionLabels = ['Normal', 'Lento', 'Atordoado', 'Inconsciente'];
+
   const attrLabels: Record<AttributeName, string> = { STR: 'Força', DEX: 'Destreza', CON: 'Constituição', INT: 'Inteligência', WIS: 'Sabedoria', CHA: 'Carisma' };
   const defenseIcons: Record<string, string> = { Reflexo: 'shield', Fortitude: 'fitness_center', Vontade: 'psychology' };
 
@@ -298,20 +298,25 @@ export function CharacterSheet() {
               </section>
             </div>
 
-            {/* Condition */}
+            {/* Destination Points */}
             <section className="sheet-panel">
-              <h3 className="sheet-panel-title">Condição</h3>
+              <h3 className="sheet-panel-title">Pontos de Destino</h3>
               {editMode ? (
-                <ConditionTracker
-                  currentStep={c.currentCondition}
-                  onChange={v => updateChar({ currentCondition: v })}
-                />
+                <div className="destination-points-display">
+                  <input
+                    type="number"
+                    className="hp-edit-input"
+                    style={{ width: 56, fontSize: 18 }}
+                    value={c.destinationPoints}
+                    onChange={e => updateChar({ destinationPoints: Math.max(0, parseInt(e.target.value) || 0) })}
+                    min={0}
+                  />
+                  <span className="destination-points-label">ponto{c.destinationPoints !== 1 ? 's' : ''}</span>
+                </div>
               ) : (
-                <div className="condition-display">
-                  <div className="condition-step-num">{c.currentCondition}</div>
-                  <span className="condition-step-label">
-                    {conditionLabels[c.currentCondition] || `Passo ${c.currentCondition}`}
-                  </span>
+                <div className="destination-points-display">
+                  <div className="destination-points-value">{c.destinationPoints}</div>
+                  <span className="destination-points-label">ponto{c.destinationPoints !== 1 ? 's' : ''}</span>
                 </div>
               )}
             </section>

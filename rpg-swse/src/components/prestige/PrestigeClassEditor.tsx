@@ -8,24 +8,52 @@ interface Props {
   onUpdatePrestige: (prestige: Character['prestigeClass']) => void;
 }
 
+interface ConfirmState {
+  open: boolean;
+  title: string;
+  message: string;
+  icon: string;
+  image?: string;
+  color: string;
+  onConfirm: () => void;
+}
+
 export default function PrestigeClassEditor({ character, editMode, onUpdatePrestige }: Props) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [confirm, setConfirm] = useState<ConfirmState>({ open: false, title: '', message: '', icon: '', color: '', onConfirm: () => {} });
 
   const hasPrestige = !!character.prestigeClass;
 
   function handleSelect(prestige: PrestigeClassData) {
     if (!editMode || hasPrestige) return;
-    if (!confirm(`Selecionar ${prestige.name}? Isso será confirmado e não poderá ser desfeito facilmente.`)) return;
-    onUpdatePrestige({
-      classId: prestige.id,
-      className: prestige.name,
-      level: 1,
+    setConfirm({
+      open: true,
+      title: prestige.name,
+      message: prestige.recruitMessage,
+      icon: prestige.icon,
+      image: prestige.recruitImage,
+      color: 'var(--accent)',
+      onConfirm: () => {
+        onUpdatePrestige({
+          classId: prestige.id,
+          className: prestige.name,
+          level: 1,
+        });
+      },
     });
   }
 
   function handleRemove() {
-    if (!confirm('Remover classe de prestígio? Isso reverterá todos os ganhos dessa classe.')) return;
-    onUpdatePrestige(undefined);
+    const pcData = prestigeClasses.find(p => p.id === character.prestigeClass?.classId);
+    setConfirm({
+      open: true,
+      title: 'Abandonar classe?',
+      message: 'Isso reverterá todos os ganhos dessa classe.',
+      icon: pcData?.icon || 'warning',
+      image: pcData?.recruitImage,
+      color: '#ef4444',
+      onConfirm: () => onUpdatePrestige(undefined),
+    });
   }
 
   function handleLevelUp() {
@@ -244,6 +272,33 @@ export default function PrestigeClassEditor({ character, editMode, onUpdatePrest
           );
         })}
       </div>
+
+      {confirm.open && (
+        <div className="prestige-confirm-overlay" onClick={() => setConfirm({ ...confirm, open: false })}>
+          <div className="prestige-confirm-modal" onClick={e => e.stopPropagation()}>
+            <div className="prestige-confirm-image-wrap">
+              {confirm.image ? (
+                <img src={confirm.image} alt={confirm.title} className="prestige-confirm-image" />
+              ) : (
+                <div className="prestige-confirm-image-placeholder" style={{ background: `linear-gradient(135deg, ${confirm.color}44, ${confirm.color}11)` }}>
+                  <span className="icon prestige-confirm-image-icon" style={{ color: confirm.color }}>{confirm.icon}</span>
+                </div>
+              )}
+              <div className="prestige-confirm-image-overlay" />
+            </div>
+            <div className="prestige-confirm-content">
+              <h3>{confirm.title}</h3>
+              <p className="prestige-confirm-message">{confirm.message}</p>
+              <div className="prestige-confirm-actions">
+                <button className="btn-secondary" onClick={() => setConfirm({ ...confirm, open: false })}>Cancelar</button>
+                <button className="btn-primary" onClick={() => { confirm.onConfirm(); setConfirm({ ...confirm, open: false }); }}>
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

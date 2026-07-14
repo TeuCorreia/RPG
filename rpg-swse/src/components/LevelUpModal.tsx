@@ -57,6 +57,7 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
       classes: updatedClasses,
       attributes: updatedAttrs,
       currentHp: character.currentHp + hpGain,
+      destinationPoints: (character.destinationPoints ?? character.level) + 1,
     };
 
     onConfirm(updates);
@@ -179,6 +180,14 @@ export function LevelUpModal({ character, onConfirm, onClose }: Props) {
           <div>
             <strong>Metade do nível</strong>
             <small>Bônus aumenta para +{Math.floor(nextLevel / 2)}</small>
+          </div>
+        </div>
+
+        <div className="levelup-section">
+          <span className="levelup-icon material-symbols-outlined">flag</span>
+          <div>
+            <strong>+1 Ponto de Destino</strong>
+            <small>Total: {(character.destinationPoints ?? character.level) + 1}</small>
           </div>
         </div>
 
