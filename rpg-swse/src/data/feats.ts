@@ -163,6 +163,12 @@ export const featsCatalog: FeatCatalogItem[] = [
     type: 'general',
   },
   {
+    id: 'feat-lucky',
+    name: 'Sorte do Tolo',
+    description: 'Uma vez por cena, você pode rerolar um teste de ataque, perícia ou resistência que acabou de fazer. Deve aceitar o segundo resultado.',
+    type: 'general',
+  },
+  {
     id: 'feat-armor-proficiency-light',
     name: 'Proficiência em Armadura Leve',
     description: 'Pode usar armaduras leves sem penalidade.',

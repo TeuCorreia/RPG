@@ -331,12 +331,20 @@ export const vigaristaTalents: TalentCatalogItem[] = [
 
   // Escaramucador
   {
+    id: 'talent-sneak-attack',
+    name: 'Ataque Furtivo',
+    description: '+1d6 de dano em ataques furtivos (flanqueando ou surpreendendo oponentes).',
+    tree: 'Escaramucador',
+    class: 'Vigarista',
+    order: 1,
+  },
+  {
     id: 'talent-draw-Fire',
     name: 'Atrair Fogo',
     description: '-2 AC para +2 ataque de aliados.',
     tree: 'Escaramucador',
     class: 'Vigarista',
-    order: 1,
+    order: 2,
   },
   {
     id: 'talent-harmful-Tech',
@@ -345,7 +353,7 @@ export const vigaristaTalents: TalentCatalogItem[] = [
     tree: 'Escaramucador',
     class: 'Vigarista',
     prerequisites: ['Atrair Fogo'],
-    order: 2,
+    order: 3,
   },
   {
     id: 'talent-master-Saboteur',
@@ -354,7 +362,7 @@ export const vigaristaTalents: TalentCatalogItem[] = [
     tree: 'Escaramucador',
     class: 'Vigarista',
     prerequisites: ['Tecnologia Nociva'],
-    order: 3,
+    order: 4,
   },
 ];
 
